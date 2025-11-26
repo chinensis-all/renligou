@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/doc/" />
+  <Folder Name="/doc/agent/" />
+  <Folder Name="/doc/agent/base/">
+    <File Path="doc/agent/structure.md" />
+  </Folder>
+  <Folder Name="/doc/data/">
+    <File Path="doc/data/schema.sql" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Renligou.Boss/Renligou.Boss.csproj" />
+    <Project Path="src/Renligou.Contracts/Renligou.Contracts.csproj" />
+  </Folder>
+  <Folder Name="/src/core/">
+    <Project Path="src/core/Renligou.Application/Renligou.Application.csproj" />
+    <Project Path="src/core/Renligou.Domain/Renligou.Domain.csproj" />
+    <Project Path="src/core/Renligou.Infras/Renligou.Infras.csproj" />
+  </Folder>
+</Solution>
