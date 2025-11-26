@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4d70ff;stop-opacity:0.1" />
+      <stop offset="100%" style="stop-color:#2F54EB;stop-opacity:0.2" />
+    </linearGradient>
+    <linearGradient id="cardGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#F0F5FF;stop-opacity:0.9" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="800" height="600" fill="url(#bgGradient)"/>
+  
+  <!-- Team collaboration illustration -->
+  <!-- Desk -->
+  <rect x="150" y="400" width="500" height="20" fill="#1D39C4" opacity="0.3" rx="10"/>
+  
+  <!-- People working together -->
+  <!-- Person 1 - Left -->
+  <circle cx="250" cy="280" r="40" fill="#F0F5FF"/>
+  <circle cx="250" cy="265" r="25" fill="#4d70ff"/>
+  <path d="M250 290 L250 370 M250 320 L220 350 M250 320 L280 350" stroke="#1D39C4" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Person 2 - Center -->
+  <circle cx="400" cy="260" r="45" fill="#F0F5FF"/>
+  <circle cx="400" cy="243" r="28" fill="#2F54EB"/>
+  <path d="M400 270 L400 360 M400 310 L365 345 M400 310 L435 345" stroke="#1D39C4" stroke-width="10" stroke-linecap="round"/>
+  
+  <!-- Person 3 - Right -->
+  <circle cx="550" cy="280" r="40" fill="#F0F5FF"/>
+  <circle cx="550" cy="265" r="25" fill="#4d70ff"/>
+  <path d="M550 290 L550 370 M550 320 L520 350 M550 320 L580 350" stroke="#1D39C4" stroke-width="8" stroke-linecap="round"/>
+  
+  <!-- Documents/Cards floating -->
+  <g opacity="0.8">
+    <!-- Card 1 -->
+    <rect x="100" y="150" width="120" height="80" fill="url(#cardGradient)" rx="8" stroke="#2F54EB" stroke-width="2"/>
+    <line x1="115" y1="170" x2="190" y2="170" stroke="#2F54EB" stroke-width="3" stroke-linecap="round"/>
+    <line x1="115" y1="190" x2="170" y2="190" stroke="#4d70ff" stroke-width="2" stroke-linecap="round"/>
+    <line x1="115" y1="205" x2="180" y2="205" stroke="#4d70ff" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Card 2 -->
+    <rect x="580" y="120" width="130" height="90" fill="url(#cardGradient)" rx="8" stroke="#2F54EB" stroke-width="2"/>
+    <circle cx="620" cy="155" r="15" fill="#52C41A"/>
+    <line x1="645" y1="150" x2="690" y2="150" stroke="#2F54EB" stroke-width="3" stroke-linecap="round"/>
+    <line x1="645" y1="165" x2="680" y2="165" stroke="#4d70ff" stroke-width="2" stroke-linecap="round"/>
+    <line x1="595" y1="185" x2="690" y2="185" stroke="#4d70ff" stroke-width="2" stroke-linecap="round"/>
+    
+    <!-- Card 3 -->
+    <rect x="320" y="100" width="160" height="100" fill="url(#cardGradient)" rx="8" stroke="#2F54EB" stroke-width="2"/>
+    <rect x="335" y="120" width="40" height="40" fill="#F0F5FF" stroke="#2F54EB" stroke-width="2" rx="4"/>
+    <line x1="390" y1="130" x2="455" y2="130" stroke="#2F54EB" stroke-width="3" stroke-linecap="round"/>
+    <line x1="390" y1="150" x2="440" y2="150" stroke="#4d70ff" stroke-width="2" stroke-linecap="round"/>
+    <line x1="335" y1="175" x2="455" y2="175" stroke="#4d70ff" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Connection lines between people -->
+  <path d="M280 310 Q340 290 365 300" stroke="#52C41A" stroke-width="3" stroke-dasharray="5,5" opacity="0.6" fill="none"/>
+  <path d="M435 300 Q490 290 520 310" stroke="#52C41A" stroke-width="3" stroke-dasharray="5,5" opacity="0.6" fill="none"/>
+  
+  <!-- Icons/symbols -->
+  <!-- Checkmark -->
+  <circle cx="150" cy="350" r="20" fill="#52C41A" opacity="0.8"/>
+  <path d="M143 350 L148 355 L157 343" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Star -->
+  <path d="M650 350 L655 360 L666 362 L657 370 L659 381 L650 376 L641 381 L643 370 L634 362 L645 360 Z" fill="#FAAD14" opacity="0.8"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="120" cy="480" r="8" fill="#4d70ff" opacity="0.4"/>
+  <circle cx="680" cy="460" r="10" fill="#52C41A" opacity="0.4"/>
+  <circle cx="720" cy="200" r="6" fill="#2F54EB" opacity="0.5"/>
+  <circle cx="80" cy="250" r="7" fill="#4d70ff" opacity="0.3"/>
+</svg>
