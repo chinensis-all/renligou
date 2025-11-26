@@ -1,6 +1,9 @@
 <Solution>
   <Folder Name="/doc/" />
-  <Folder Name="/doc/agent/" />
+  <Folder Name="/doc/agent/">
+    <File Path="doc/agent/1.Boss主题定制.md" />
+    <File Path="doc/agent/2.完成Boss登录页面.md" />
+  </Folder>
   <Folder Name="/doc/agent/base/">
     <File Path="doc/agent/structure.md" />
   </Folder>
