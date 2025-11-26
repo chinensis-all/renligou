@@ -1,0 +1,186 @@
+﻿@page "/login"
+@layout EmptyLayout
+
+<PageTitle>登录 - 人力狗 : 人资服务认准人力狗！</PageTitle>
+
+<div class="login-container">
+    <!-- Left Panel - Brand & Illustration -->
+    <div class="login-left">
+        <div class="brand-section">
+            <p class="brand-slogan">智能人力资源管理平台 - 猎头、外包、派遣。</p>
+        </div>
+        <div class="illustration-section">
+            <img src="/images/hr-illustration.svg" alt="人力资源管理" class="illustration-image" />
+        </div>
+    </div>
+
+    <!-- Right Panel - Login Form -->
+    <div class="login-right">
+        <div class="login-form-container">
+            <div class="login-header">
+                <h2><span>人力狗</span>&nbsp;&nbsp欢迎回来</h2>
+                <p>登录您的账户以继续使用</p>
+            </div>
+
+            <Tabs DefaultActiveKey="account" Class="login-tabs">
+                <TabPane Key="account" Tab="账号登录">
+                    <Form Model="@accountModel" OnFinish="OnAccountLogin" Layout="@FormLayout.Vertical" Class="login-form">
+                        <FormItem Label="用户名">
+                            <Input @bind-Value="@context.Username" Placeholder="请输入用户名" Size="@InputSize.Large">
+                                <Prefix><Icon Type="user" /></Prefix>
+                            </Input>
+                        </FormItem>
+                        <FormItem Label="密码">
+                            <InputPassword @bind-Value="@context.Password" Placeholder="请输入密码" Size="@InputSize.Large">
+                                <Prefix><Icon Type="lock" /></Prefix>
+                            </InputPassword>
+                        </FormItem>
+                        <FormItem>
+                            <div class="login-options">
+                                <Checkbox @bind-Checked="@context.RememberMe">记住我</Checkbox>
+                                <a href="/forgot-password" class="forgot-link">忘记密码?</a>
+                            </div>
+                        </FormItem>
+                        <FormItem>
+                            <Button Type="@ButtonType.Primary" HtmlType="submit" Size="@ButtonSize.Large" Block Loading="@isLoading">
+                                登录
+                            </Button>
+                        </FormItem>
+                    </Form>
+                </TabPane>
+
+                <TabPane Key="phone" Tab="手机验证码">
+                    <Form Model="@phoneModel" OnFinish="OnPhoneLogin" Layout="@FormLayout.Vertical" Class="login-form">
+                        <FormItem Label="手机号">
+                            <Input @bind-Value="@context.PhoneNumber" Placeholder="请输入手机号" Size="@InputSize.Large">
+                                <Prefix><Icon Type="mobile" /></Prefix>
+                            </Input>
+                        </FormItem>
+                        <FormItem Label="验证码">
+                            <Space Style="width: 100%;">
+                                <SpaceItem Style="flex: 1;">
+                                    <Input @bind-Value="@context.Code" Placeholder="请输入验证码" Size="@InputSize.Large">
+                                        <Prefix><Icon Type="safety-certificate" /></Prefix>
+                                    </Input>
+                                </SpaceItem>
+                                <SpaceItem>
+                                    <Button Size="@ButtonSize.Large" Disabled="@isCodeSending" OnClick="SendVerificationCode">
+                                        @(codeCountdown > 0 ? $"{codeCountdown}秒后重试" : "获取验证码")
+                                    </Button>
+                                </SpaceItem>
+                            </Space>
+                        </FormItem>
+                        <FormItem>
+                            <Checkbox @bind-Checked="@context.RememberMe">记住我</Checkbox>
+                        </FormItem>
+                        <FormItem>
+                            <Button Type="@ButtonType.Primary" HtmlType="submit" Size="@ButtonSize.Large" Block Loading="@isLoading">
+                                登录
+                            </Button>
+                        </FormItem>
+                    </Form>
+                </TabPane>
+            </Tabs>
+
+            <div class="login-footer">
+                <span>©2025-2026</span>
+                <a href="https://mayanshe.com" class="register-link">码研社</a> 版权所有
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private AccountLoginModel accountModel = new();
+    private PhoneLoginModel phoneModel = new();
+    private bool isLoading = false;
+    private bool isCodeSending = false;
+    private int codeCountdown = 0;
+    private System.Threading.Timer? countdownTimer;
+
+    public class AccountLoginModel
+    {
+        public string Username { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public bool RememberMe { get; set; }
+    }
+
+    public class PhoneLoginModel
+    {
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public bool RememberMe { get; set; }
+    }
+
+    private async Task OnAccountLogin(EditContext context)
+    {
+        isLoading = true;
+        try
+        {
+            // TODO: 实现账号登录逻辑
+            await Task.Delay(1000); // 模拟API调用
+            // 登录成功后跳转到主页
+            // NavigationManager.NavigateTo("/");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task OnPhoneLogin(EditContext context)
+    {
+        isLoading = true;
+        try
+        {
+            // TODO: 实现手机验证码登录逻辑
+            await Task.Delay(1000); // 模拟API调用
+            // 登录成功后跳转到主页
+            // NavigationManager.NavigateTo("/");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task SendVerificationCode()
+    {
+        if (string.IsNullOrWhiteSpace(phoneModel.PhoneNumber))
+        {
+            // TODO: 显示提示消息
+            return;
+        }
+
+        isCodeSending = true;
+        codeCountdown = 60;
+        
+        try
+        {
+            // TODO: 调用发送验证码API
+            await Task.Delay(500);
+            
+            // 启动倒计时
+            countdownTimer = new System.Threading.Timer(_ =>
+            {
+                codeCountdown--;
+                if (codeCountdown <= 0)
+                {
+                    countdownTimer?.Dispose();
+                    isCodeSending = false;
+                }
+                InvokeAsync(StateHasChanged);
+            }, null, 1000, 1000);
+        }
+        catch
+        {
+            isCodeSending = false;
+            codeCountdown = 0;
+        }
+    }
+
+    public void Dispose()
+    {
+        countdownTimer?.Dispose();
+    }
+}

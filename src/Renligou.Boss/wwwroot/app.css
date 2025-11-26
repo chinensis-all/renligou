@@ -1,60 +1,564 @@
+/* 全局样式定制 */
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', 'Hiragino Sans GB', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5715;
+    color: #1F1F1F;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-a, .btn-link {
-    color: #006bb7;
+/* CSS 变量定制 - Ant Design Blazor 主题颜色 */
+:root {
+    /* 主色调 */
+    --ant-primary-color: #2F54EB;
+    --ant-primary-color-hover: #4d70ff;
+    --ant-primary-color-active: #1D39C4;
+    --ant-primary-color-outline: rgba(47, 84, 235, 0.2);
+    
+    /* 主色调色板 */
+    --ant-primary-1: #F0F5FF;
+    --ant-primary-2: #d6e4ff;
+    --ant-primary-3: #adc6ff;
+    --ant-primary-4: #85a5ff;
+    --ant-primary-5: #597ef7;
+    --ant-primary-6: #2F54EB;
+    --ant-primary-7: #1D39C4;
+    --ant-primary-8: #10239e;
+    --ant-primary-9: #061178;
+    --ant-primary-10: #030852;
+    
+    /* 成功色 */
+    --ant-success-color: #52C41A;
+    --ant-success-color-hover: #73d13d;
+    --ant-success-color-active: #389e0d;
+    --ant-success-color-outline: rgba(82, 196, 26, 0.2);
+    --ant-success-color-deprecated-bg: #f6ffed;
+    --ant-success-color-deprecated-border: #b7eb8f;
+    
+    /* 错误色 */
+    --ant-error-color: #FF4D4F;
+    --ant-error-color-hover: #ff7875;
+    --ant-error-color-active: #d9363e;
+    --ant-error-color-outline: rgba(255, 77, 79, 0.2);
+    --ant-error-color-deprecated-bg: #fff2f0;
+    --ant-error-color-deprecated-border: #ffccc7;
+    
+    /* 警告色 */
+    --ant-warning-color: #FAAD14;
+    --ant-warning-color-hover: #ffc53d;
+    --ant-warning-color-active: #d48806;
+    --ant-warning-color-outline: rgba(250, 173, 20, 0.2);
+    --ant-warning-color-deprecated-bg: #fffbe6;
+    --ant-warning-color-deprecated-border: #ffe58f;
+    
+    /* 信息色 */
+    --ant-info-color: #2F54EB;
+    --ant-info-color-deprecated-bg: #F0F5FF;
+    --ant-info-color-deprecated-border: #adc6ff;
+    
+    /* 文本颜色 */
+    --ant-text-color: #1F1F1F;
+    --ant-text-color-secondary: rgba(31, 31, 31, 0.65);
+    --ant-text-color-inverse: #fff;
+    --ant-heading-color: #1F1F1F;
+    --ant-text-color-dark: rgba(255, 255, 255, 0.85);
+    --ant-text-color-secondary-dark: rgba(255, 255, 255, 0.65);
+    
+    /* 背景色 */
+    --ant-body-background: #ffffff;
+    --ant-component-background: #ffffff;
+    --ant-background-color-light: #fafafa;
+    --ant-background-color-base: #f5f5f5;
+    --ant-item-active-bg: #F0F5FF;
+    --ant-item-hover-bg: #f5f5f5;
+    
+    /* 边框颜色 */
+    --ant-border-color-base: #d9d9d9;
+    --ant-border-color-split: #f0f0f0;
+    --ant-border-radius-base: 2px;
+    
+    /* 链接颜色 */
+    --ant-link-color: #2F54EB;
+    --ant-link-hover-color: #4d70ff;
+    --ant-link-active-color: #1D39C4;
+    
+    /* 布局 */
+    --ant-layout-body-background: #f0f2f5;
+    --ant-layout-header-background: #1D39C4;
+    --ant-layout-sider-background: #1D39C4;
+    
+    /* 菜单 */
+    --ant-menu-bg: #ffffff;
+    --ant-menu-item-color: #1F1F1F;
+    --ant-menu-highlight-color: #2F54EB;
+    --ant-menu-item-active-bg: #F0F5FF;
+    --ant-menu-dark-bg: #1D39C4;
+    --ant-menu-dark-item-active-bg: #2F54EB;
+    
+    /* 按钮 */
+    --ant-btn-primary-bg: #2F54EB;
+    --ant-btn-primary-color: #ffffff;
+    --ant-btn-danger-bg: #FF4D4F;
+    --ant-btn-danger-color: #ffffff;
+    
+    /* 表格 */
+    --ant-table-header-bg: #fafafa;
+    --ant-table-row-hover-bg: #F0F5FF;
+    --ant-table-selected-row-bg: #F0F5FF;
+    
+    /* 标签 */
+    --ant-tag-default-bg: #fafafa;
+    --ant-tag-default-color: #1F1F1F;
+    
+    /* 进度条 */
+    --ant-progress-default-color: #2F54EB;
+    
+    /* 开关 */
+    --ant-switch-color: #2F54EB;
+    
+    /* 滑块 */
+    --ant-slider-track-background-color: #4d70ff;
+    --ant-slider-handle-color: #4d70ff;
+    
+    /* 阴影 */
+    --ant-shadow-1-down: 0 6px 16px -8px rgba(0, 0, 0, 0.08), 0 9px 28px 0 rgba(0, 0, 0, 0.05), 0 12px 48px 16px rgba(0, 0, 0, 0.03);
+    --ant-shadow-2: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+    
+    /* 禁用状态 */
+    --ant-disabled-color: rgba(0, 0, 0, 0.25);
+    --ant-disabled-bg: #f5f5f5;
 }
 
-.btn-primary {
+/* 深色主题下的调整（可选） */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ant-body-background: #141414;
+        --ant-component-background: #1f1f1f;
+        --ant-text-color: rgba(255, 255, 255, 0.85);
+        --ant-heading-color: rgba(255, 255, 255, 0.85);
+        --ant-border-color-base: #434343;
+    }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 选中文本的颜色 */
+::selection {
+    background-color: #2F54EB;
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+::-moz-selection {
+    background-color: #2F54EB;
+    color: #fff;
 }
 
-.content {
-    padding-top: 1.1rem;
+/* ========== 登录页面样式 ========== */
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-h1:focus {
-    outline: none;
-}
-
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
-}
-
-.invalid {
-    outline: 1px solid #e50000;
-}
-
-.validation-message {
-    color: #e50000;
-}
-
-.blazor-error-boundary {
-    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ny4wNTIgNTIuNzk4NyAyNjcuNTM5IDUzLjYyODMgMjkwLjE4NSA5Mi4xODMxIDI5MC41NDUgOTIuNzk1IDI5MC42NTYgOTIuOTk2QzI5MC44NzcgOTMuNTEzIDI5MSA5NC4wODE1IDI5MSA5NC42NzgyIDI5MSA5Ny4wNjUxIDI4OS4wMzggOTkgMjg2LjYxNyA5OUwyNDAuMzgzIDk5QzIzNy45NjMgOTkgMjM2IDk3LjA2NTEgMjM2IDk0LjY3ODIgMjM2IDk0LjM3OTkgMjM2LjAzMSA5NC4wODg2IDIzNi4wODkgOTMuODA3MkwyMzYuMzM4IDkzLjAxNjIgMjM2Ljg1OCA5Mi4xMzE0IDI1OS40NzMgNTMuNjI5NCAyNTkuOTYxIDUyLjc5ODUgMjYwLjQwNyA1Mi4yNjU4QzI2MS4yIDUxLjQ4MzcgMjYyLjI5NiA1MSAyNjMuNTA2IDUxWk0yNjMuNTg2IDY2LjAxODNDMjYwLjczNyA2Ni4wMTgzIDI1OS4zMTMgNjcuMTI0NSAyNTkuMzEzIDY5LjMzNyAyNTkuMzEzIDY5LjYxMDIgMjU5LjMzMiA2OS44NjA4IDI1OS4zNzEgNzAuMDg4N0wyNjEuNzk1IDg0LjAxNjEgMjY1LjM4IDg0LjAxNjEgMjY3LjgyMSA2OS43NDc1QzI2Ny44NiA2OS43MzA5IDI2Ny44NzkgNjkuNTg3NyAyNjcuODc5IDY5LjMxNzkgMjY3Ljg3OSA2Ny4xMTgyIDI2Ni40NDggNjYuMDE4MyAyNjMuNTg2IDY2LjAxODNaTTI2My41NzYgODYuMDU0N0MyNjEuMDQ5IDg2LjA1NDcgMjU5Ljc4NiA4Ny4zMDA1IDI1OS43ODYgODkuNzkyMSAyNTkuNzg2IDkyLjI4MzcgMjYxLjA0OSA5My41Mjk1IDI2My41NzYgOTMuNTI5NSAyNjYuMTE2IDkzLjUyOTUgMjY3LjM4NyA5Mi4yODM3IDI2Ny4zODcgODkuNzkyMSAyNjcuMzg3IDg3LjMwMDUgMjY2LjExNiA4Ni4wNTQ3IDI2My41NzYgODYuMDU0N1oiIGZpbGw9IiNGRkU1MDAiIGZpbGwtcnVsZT0iZXZlbm9kZCIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
-    padding: 1rem 1rem 1rem 3.7rem;
+/* 左侧面板 - 6/10 */
+.login-left {
+    flex: 0 0 60%;
+    background: linear-gradient(135deg, #2F54EB 0%, #1D39C4 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px;
     color: white;
+    position: relative;
+    overflow: hidden;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
+.login-left::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: pulse 15s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.3; }
+}
+
+.brand-section {
+    text-align: center;
+    margin-bottom: 40px;
+    z-index: 1;
+    animation: fadeInDown 1s ease-out;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.brand-title {
+    font-size: 64px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 4px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    background: linear-gradient(to right, #ffffff, #F0F5FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brand-slogan {
+    font-size: 20px;
+    margin: 20px 0;
+    opacity: 0.95;
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+.brand-quote {
+    font-size: 16px;
+    font-style: italic;
+    opacity: 0.85;
+    margin-top: 30px;
+    padding: 20px;
+    border-left: 4px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    backdrop-filter: blur(10px);
+}
+
+.illustration-section {
+    max-width: 600px;
+    width: 100%;
+    z-index: 1;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.illustration-image {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.2));
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* 右侧面板 - 4/10 */
+.login-right {
+    flex: 0 0 40%;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+}
+
+.login-form-container {
+    width: 100%;
+    max-width: 420px;
+    animation: fadeIn 1s ease-out 0.5s both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.login-header {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.login-header h2 {
+    font-size: 32px;
+    font-weight: 600;
+    color: #1F1F1F;
+    margin: 0 0 12px 0;
+}
+
+.login-header p {
+    font-size: 14px;
+    color: rgba(31, 31, 31, 0.65);
+    margin: 0;
+}
+
+    .login-header span {
+        color: var(--ant-primary-8);
     }
 
-.darker-border-checkbox.form-check-input {
-    border-color: #929292;
+    .login-tabs {
+        margin-bottom: 24px;
+    }
+
+.login-form {
+    margin-top: 24px;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-    color: var(--bs-secondary-color);
-    text-align: end;
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-    text-align: start;
+.forgot-link {
+    color: #2F54EB;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.forgot-link:hover {
+    color: #4d70ff;
+    text-decoration: underline;
+}
+
+.login-footer {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(31, 31, 31, 0.65);
+}
+
+.register-link {
+    color: #2F54EB;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 8px;
+    transition: color 0.3s;
+}
+
+.register-link:hover {
+    color: #4d70ff;
+    text-decoration: underline;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .login-left {
+        flex: 0 0 50%;
+    }
+    
+    .login-right {
+        flex: 0 0 50%;
+    }
+    
+    .brand-title {
+        font-size: 52px;
+    }
+}
+
+@media (max-width: 992px) {
+    .login-container {
+        flex-direction: column;
+    }
+    
+    .login-left {
+        flex: 0 0 auto;
+        min-height: 400px;
+        padding: 40px 30px;
+    }
+    
+    .login-right {
+        flex: 0 0 auto;
+        min-height: calc(100vh - 400px);
+        padding: 40px 30px;
+    }
+    
+    .brand-title {
+        font-size: 48px;
+    }
+    
+    .illustration-section {
+        max-width: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .login-left {
+        min-height: 350px;
+        padding: 30px 20px;
+    }
+    
+    .brand-title {
+        font-size: 40px;
+    }
+    
+    .brand-slogan {
+        font-size: 16px;
+    }
+    
+    .brand-quote {
+        font-size: 14px;
+        padding: 15px;
+    }
+    
+    .illustration-section {
+        max-width: 300px;
+    }
+    
+    .login-right {
+        padding: 30px 20px;
+    }
+    
+    .login-header h2 {
+        font-size: 28px;
+    }
+}
+
+/* 最小屏幕 800x600 */
+@media (max-width: 800px) and (max-height: 600px) {
+    .login-left {
+        min-height: 250px;
+        padding: 20px;
+    }
+    
+    .brand-section {
+        margin-bottom: 20px;
+    }
+    
+    .brand-title {
+        font-size: 36px;
+    }
+    
+    .brand-slogan {
+        font-size: 14px;
+        margin: 10px 0;
+    }
+    
+    .brand-quote {
+        font-size: 12px;
+        margin-top: 15px;
+        padding: 10px;
+    }
+    
+    .illustration-section {
+        max-width: 250px;
+    }
+    
+    .login-right {
+        padding: 20px;
+    }
+    
+    .login-form-container {
+        max-width: 100%;
+    }
+    
+    .login-header {
+        margin-bottom: 20px;
+    }
+    
+    .login-header h2 {
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+    
+    .login-header p {
+        font-size: 12px;
+    }
+}
+
+/* 表单输入框增强 */
+.login-form .ant-input-affix-wrapper,
+.login-form .ant-input-password {
+    transition: all 0.3s;
+}
+
+.login-form .ant-input-affix-wrapper:hover,
+.login-form .ant-input-password:hover {
+    border-color: #4d70ff;
+    box-shadow: 0 0 0 2px rgba(47, 84, 235, 0.1);
+}
+
+.login-form .ant-input-affix-wrapper:focus,
+.login-form .ant-input-affix-wrapper-focused,
+.login-form .ant-input-password:focus,
+.login-form .ant-input-password-focused {
+    border-color: #2F54EB;
+    box-shadow: 0 0 0 2px rgba(47, 84, 235, 0.2);
+}
+
+/* 按钮增强 */
+.login-form .ant-btn-primary {
+    background: linear-gradient(135deg, #2F54EB 0%, #1D39C4 100%);
+    border: none;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 12px rgba(47, 84, 235, 0.3);
+    transition: all 0.3s;
+}
+
+.login-form .ant-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(47, 84, 235, 0.4);
+}
+
+.login-form .ant-btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Tabs 样式增强 */
+.login-tabs .ant-tabs-tab {
+    font-size: 16px;
+    padding: 12px 16px;
+}
+
+.login-tabs .ant-tabs-tab-active {
+    font-weight: 600;
+}
+
+.login-tabs .ant-tabs-ink-bar {
+    background: #2F54EB;
+    height: 3px;
 }
