@@ -1,23 +1,55 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+<Layout Class="main-layout">
+    <Sider 
+           Collapsed="@collapsed" 
+           Width="242"
+           CollapsedWidth="80"
+           Class="layout-sider"
+           >
+        <div class="sider-header">
+            @if (!collapsed)
+            {
+                <div class="logo-wrapper">
+                    <div class="logo-icon">
+                        <Icon Type="user-switch" Theme="IconThemeType.Outline" Style="font-size: 38px;" />
+                    </div>
+                    <div class="logo-text">
+                        <h1>人力狗</h1>
+                        <p>HR Management</p>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="logo-wrapper-collapsed">
+                    <Icon Type="user-switch" Theme="IconThemeType.Outline" Style="font-size: 28px;" />
+                </div>
+            }
         </div>
+        <div class="sider-menu-wrapper">
+            <Renligou.Boss.Components.Layout.Menu collapsed="@collapsed" />
+        </div>
+    </Sider>
+    
+    <Layout>
+        <Renligou.Boss.Components.Layout.Header collapsed="@collapsed" OnCollapsedChanged="@HandleCollapsedChanged" />
+        
+        <div class="content-wrapper">
+            <AntDesign.Content Class="layout-content">
+                @Body
+            </AntDesign.Content>
+            
+            <Renligou.Boss.Components.Layout.Footer />
+        </div>
+    </Layout>
+</Layout>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
-<div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
-    <span class="dismiss">🗙</span>
-</div>
+@code {
+    private bool collapsed = false;
+    
+    private void HandleCollapsedChanged(bool value)
+    {
+        collapsed = value;
+    }
+}
