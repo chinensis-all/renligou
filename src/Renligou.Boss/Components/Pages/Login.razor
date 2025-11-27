@@ -26,7 +26,7 @@
                 <TabPane Key="account" Tab="账号登录">
                     <Form Model="@accountModel" OnFinish="OnAccountLogin" Layout="@FormLayout.Vertical" Class="login-form">
                         <FormItem Label="用户名">
-                            <Input @bind-Value="@context.Username" Placeholder="请输入用户名" Size="@InputSize.Large">
+                            <Input @bind-Value="@context.Username" Placeholder="请输入用户名/手机号/邮箱" Size="@InputSize.Large">
                                 <Prefix><Icon Type="user" /></Prefix>
                             </Input>
                         </FormItem>

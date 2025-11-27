@@ -1,7 +1,59 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>工作台 - 人力狗</PageTitle>
 
-<h1>Hello, world!</h1>
+<div style="padding: 24px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+    <div style="margin-bottom: 24px;">
+        <Title Level="2">👋 欢迎来到人力狗管理系统</Title>
+        <Paragraph>
+            这是一个现代化的人力资源管理平台，帮助您更好地管理团队。
+        </Paragraph>
+    </div>
 
-Welcome to your new app.
+    <Row Gutter="16">
+        <AntDesign.Col Span="6">
+            <Card Hoverable Style="text-align: center;">
+                <div style="font-size: 48px; color: var(--ant-primary-color);">
+                    <Icon Type="team" />
+                </div>
+                <Title Level="3" Style="margin: 16px 0 8px 0;">1,234</Title>
+                <Text Type="@TextElementType.Secondary">员工总数</Text>
+            </Card>
+        </AntDesign.Col>
+        <AntDesign.Col Span="6">
+            <Card Hoverable Style="text-align: center;">
+                <div style="font-size: 48px; color: var(--ant-success-color);">
+                    <Icon Type="user-add" />
+                </div>
+                <Title Level="3" Style="margin: 16px 0 8px 0;">42</Title>
+                <Text Type="@TextElementType.Secondary">本月入职</Text>
+            </Card>
+        </AntDesign.Col>
+        <AntDesign.Col Span="6">
+            <Card Hoverable Style="text-align: center;">
+                <div style="font-size: 48px; color: var(--ant-warning-color);">
+                    <Icon Type="bell" />
+                </div>
+                <Title Level="3" Style="margin: 16px 0 8px 0;">15</Title>
+                <Text Type="@TextElementType.Secondary">待审批</Text>
+            </Card>
+        </AntDesign.Col>
+        <AntDesign.Col Span="6">
+            <Card Hoverable Style="text-align: center;">
+                <div style="font-size: 48px; color: var(--ant-error-color);">
+                    <Icon Type="user-delete" />
+                </div>
+                <Title Level="3" Style="margin: 16px 0 8px 0;">5</Title>
+                <Text Type="@TextElementType.Secondary">本月离职</Text>
+            </Card>
+        </AntDesign.Col>
+    </Row>
+
+    <div style="margin-top: 24px; padding: 20px; background: var(--ant-primary-1); border-radius: 6px; border-left: 4px solid var(--ant-primary-color);">
+        <Title Level="4" Style="margin: 0; font-style: italic; color: var(--ant-text-color-secondary);">"伟大的事业不是靠力量、速度和身体的敏捷完成的，而是靠性格、意志和知识的力量完成的。" - 约翰·诺克斯</Title>
+    </div>
+</div>
+
+@code {
+    
+}
