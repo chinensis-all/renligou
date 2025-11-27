@@ -1,0 +1,239 @@
+﻿@inject IJSRuntime JSRuntime
+
+<AntDesign.Header Class="layout-header">
+    <div class="header-left">
+        <Button Type="@ButtonType.Text" 
+                Icon="menu-fold" 
+                OnClick="@ToggleCollapsed"
+                Class="trigger-btn"/>
+        <div class="search-box">
+            <Search Placeholder="搜索菜单、功能..." Size="@InputSize.Default" Style="width: 300px;" />
+        </div>
+    </div>
+    
+    <div class="header-right">
+        <Space Size="SpaceSize.Large">
+            <SpaceItem>
+                <Badge Count="@unreadMessages">
+                    <Button Type="@ButtonType.Text" Icon="bell" OnClick="@(() => messageDrawerVisible = true)" Class="header-icon-btn" />
+                </Badge>
+            </SpaceItem>
+            
+            <SpaceItem>
+                <Badge Count="@unreadEmails">
+                    <Button Type="@ButtonType.Text" Icon="mail" OnClick="@(() => emailDrawerVisible = true)" Class="header-icon-btn" />
+                </Badge>
+            </SpaceItem>
+            
+            <SpaceItem>
+                <Button Type="@ButtonType.Text" 
+                        Icon="@(isFullScreen ? "fullscreen-exit" : "fullscreen")" 
+                        OnClick="@ToggleFullScreen" 
+                        Class="header-icon-btn" />
+            </SpaceItem>
+            
+            <SpaceItem>
+                <Dropdown>
+                    <Overlay>
+                        <AntDesign.Menu>
+                            <MenuItem Key="profile" OnClick="@(() => NavigateToProfile())">
+                                <Icon Type="user" />
+                                <span style="margin-left: 8px;">个人资料</span>
+                            </MenuItem>
+                            <MenuDivider />
+                            <MenuItem Key="logout" OnClick="@(() => Logout())">
+                                <Icon Type="logout" />
+                                <span style="margin-left: 8px;">退出登录</span>
+                            </MenuItem>
+                        </AntDesign.Menu>
+                    </Overlay>
+                    <ChildContent>
+                        <div class="user-avatar-wrapper">
+                            <Avatar Src="/images/avatar.svg" />
+                            <span class="user-name">管理员</span>
+                            <Icon Type="down" Style="font-size: 12px; margin-left: 4px;" />
+                        </div>
+                    </ChildContent>
+                </Dropdown>
+            </SpaceItem>
+        </Space>
+    </div>
+</AntDesign.Header>
+
+<Drawer Closable="true"
+        Width="400"
+        Visible="@messageDrawerVisible"
+        Title="@meesageTitle"
+        Placement="@DrawerPlacement.Right"
+        OnClose="@(() => OnMessageDrawerClose())">
+    <div class="message-list">
+        @foreach (var msg in messages)
+        {
+            <div class="message-item" @onclick="@(() => ReadMessage(msg.Id))">
+                <div class="message-avatar">
+                    <Avatar Src="@msg.Avatar" />
+                </div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-sender">@msg.Sender</span>
+                        <span class="message-time">@msg.Time</span>
+                    </div>
+                    <div class="message-text">@msg.Content</div>
+                </div>
+            </div>
+        }
+    </div>
+</Drawer>
+
+<Drawer Closable="true"
+        Width="450"
+        Visible="@emailDrawerVisible"
+        Title="@emailTitle"
+        Placement="@DrawerPlacement.Right"
+        OnClose="@(() => OnEmailDrawerClose())">
+    <div class="message-list">
+        @foreach (var email in emails)
+        {
+            <div class="email-item" @onclick="@(() => ReadEmail(email.Id))">
+                <div class="email-header">
+                    <div class="email-tags">
+                        @foreach (var tag in email.Tags)
+                        {
+                            <Tag Color="@GetTagColor(tag)">@tag</Tag>
+                        }
+                    </div>
+                    <span class="email-time">@email.Time</span>
+                </div>
+                <div class="email-title">@email.Title</div>
+                <div class="email-summary">@email.Summary</div>
+            </div>
+        }
+    </div>
+</Drawer>
+
+@code {
+    [Parameter]
+    public bool collapsed { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnCollapsedChanged { get; set; }
+
+    private bool messageDrawerVisible = false;
+    private bool emailDrawerVisible = false;
+    private int unreadMessages = 5;
+    private int unreadEmails = 3;
+    private bool isFullScreen = false;
+    private string meesageTitle = "站内信";
+	private string emailTitle = "邮件";
+
+    private List<MessageItem> messages = new List<MessageItem>
+    {
+        new MessageItem { Id = 1, Sender = "张三", Avatar = "/images/avatar.svg", Time = "2分钟前", Content = "您的请假申请已通过审批" },
+        new MessageItem { Id = 2, Sender = "李四", Avatar = "/images/avatar.svg", Time = "10分钟前", Content = "明天上午十点有一个重要会议" },
+        new MessageItem { Id = 3, Sender = "王五", Avatar = "/images/avatar.svg", Time = "30分钟前", Content = "请尽快提交本月的工作报告" },
+        new MessageItem { Id = 4, Sender = "赵六", Avatar = "/images/avatar.svg", Time = "1小时前", Content = "您有一份新的培训课程需要参加" },
+        new MessageItem { Id = 5, Sender = "孙七", Avatar = "/images/avatar.svg", Time = "2小时前", Content = "系统将于今晚八点进行维护升级" }
+    };
+    
+    private List<EmailItem> emails = new List<EmailItem>
+    {
+        new EmailItem { Id = 1, Tags = new List<string> { "通知" }, Time = "5分钟前", Title = "关于下周全员会议的通知", Summary = "尊敬的员工，公司将于下周一上午九点在大会议室召开全体员工大会，请大家准时参加..." },
+        new EmailItem { Id = 2, Tags = new List<string> { "告警" }, Time = "15分钟前", Title = "系统安全警告", Summary = "检测到您的账户在异地登录，如非本人操作，请立即修改密码并联系管理员..." },
+        new EmailItem { Id = 3, Tags = new List<string> { "通知", "重要" }, Time = "1小时前", Title = "薪资发放通知", Summary = "本月薪资已于今日发放，请注意查收。如有疑问，请联系人事部门..." }
+    };
+    
+    private async Task ToggleCollapsed()
+    {
+        collapsed = !collapsed;
+        await OnCollapsedChanged.InvokeAsync(collapsed);
+    }
+    
+    private async Task ToggleFullScreen()
+    {
+        isFullScreen = !isFullScreen;
+        await JSRuntime.InvokeVoidAsync("eval", @"
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        ");
+    }
+    
+    private void NavigateToProfile()
+    {
+        Console.WriteLine("导航到个人资料");
+    }
+    
+    private void Logout()
+    {
+        Console.WriteLine("退出登录");
+    }
+    
+    private void OnMessageDrawerClose()
+    {
+        messageDrawerVisible = false;
+    }
+    
+    private void OnEmailDrawerClose()
+    {
+        emailDrawerVisible = false;
+    }
+    
+    private void ReadMessage(int messageId)
+    {
+        messages.RemoveAll(m => m.Id == messageId);
+        unreadMessages = messages.Count;
+        
+        if (unreadMessages == 0)
+        {
+            messageDrawerVisible = false;
+        }
+        
+        StateHasChanged();
+    }
+    
+    private void ReadEmail(int emailId)
+    {
+        emails.RemoveAll(e => e.Id == emailId);
+        unreadEmails = emails.Count;
+        
+        if (unreadEmails == 0)
+        {
+            emailDrawerVisible = false;
+        }
+        
+        StateHasChanged();
+    }
+    
+    private string GetTagColor(string tag)
+    {
+        return tag switch
+        {
+            "通知" => "blue",
+            "告警" => "red",
+            "重要" => "orange",
+            _ => "default"
+        };
+    }
+    
+    public class MessageItem
+    {
+        public int Id { get; set; }
+        public string Sender { get; set; } = string.Empty;
+        public string Avatar { get; set; } = string.Empty;
+        public string Time { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
+    }
+    
+    public class EmailItem
+    {
+        public int Id { get; set; }
+        public List<string> Tags { get; set; } = new List<string>();
+        public string Time { get; set; } = string.Empty;
+        public string Title { get; set; } = string.Empty;
+        public string Summary { get; set; } = string.Empty;
+    }
+}

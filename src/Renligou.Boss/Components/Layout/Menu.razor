@@ -1,0 +1,162 @@
+﻿@inject NavigationManager NavigationManager
+
+<AntDesign.Menu Mode="@MenuMode.Inline" 
+                Theme="@MenuTheme.Light" 
+                DefaultSelectedKeys="@(new[]{ currentPath })"
+                Class="side-menu">
+    
+    <MenuItem Key="/" RouterLink="/">
+        <Icon Type="dashboard" />
+        <span>工作台</span>
+    </MenuItem>
+    
+    <SubMenu Key="employees" Title="员工管理">
+        <TitleTemplate>
+            <Icon Type="team" />
+            <span>员工管理</span>
+        </TitleTemplate>
+        <ChildContent>
+            <MenuItem Key="/employees/list" RouterLink="/employees/list">
+                员工列表
+            </MenuItem>
+            <MenuItem Key="/employees/onboarding" RouterLink="/employees/onboarding">
+                入职管理
+            </MenuItem>
+            <MenuItem Key="/employees/departure" RouterLink="/employees/departure">
+                离职管理
+            </MenuItem>
+        </ChildContent>
+    </SubMenu>
+    
+    <SubMenu Key="attendance" Title="考勤管理">
+        <TitleTemplate>
+            <Icon Type="calendar" />
+            <span>考勤管理</span>
+        </TitleTemplate>
+        <ChildContent>
+            <MenuItem Key="/attendance/records" RouterLink="/attendance/records">
+                考勤记录
+            </MenuItem>
+            <MenuItem Key="/attendance/leave" RouterLink="/attendance/leave">
+                请假申请
+            </MenuItem>
+            <MenuItem Key="/attendance/overtime" RouterLink="/attendance/overtime">
+                加班申请
+            </MenuItem>
+        </ChildContent>
+    </SubMenu>
+    
+    <SubMenu Key="salary" Title="薪资管理">
+        <TitleTemplate>
+            <Icon Type="wallet" />
+            <span>薪资管理</span>
+        </TitleTemplate>
+        <ChildContent>
+            <MenuItem Key="/salary/structure" RouterLink="/salary/structure">
+                薪资结构
+            </MenuItem>
+            <MenuItem Key="/salary/payroll" RouterLink="/salary/payroll">
+                工资单
+            </MenuItem>
+            <MenuItem Key="/salary/tax" RouterLink="/salary/tax">
+                税务管理
+            </MenuItem>
+        </ChildContent>
+    </SubMenu>
+    
+    <SubMenu Key="recruit" Title="招聘管理">
+        <TitleTemplate>
+            <Icon Type="solution" />
+            <span>招聘管理</span>
+        </TitleTemplate>
+        <ChildContent>
+            <MenuItem Key="/recruit/positions" RouterLink="/recruit/positions">
+                职位管理
+            </MenuItem>
+            <MenuItem Key="/recruit/candidates" RouterLink="/recruit/candidates">
+                候选人管理
+            </MenuItem>
+            <MenuItem Key="/recruit/interviews" RouterLink="/recruit/interviews">
+                面试安排
+            </MenuItem>
+        </ChildContent>
+    </SubMenu>
+    
+    <SubMenu Key="training" Title="培训管理">
+        <TitleTemplate>
+            <Icon Type="book" />
+            <span>培训管理</span>
+        </TitleTemplate>
+        <ChildContent>
+            <MenuItem Key="/training/courses" RouterLink="/training/courses">
+                课程管理
+            </MenuItem>
+            <MenuItem Key="/training/plans" RouterLink="/training/plans">
+                培训计划
+            </MenuItem>
+            <MenuItem Key="/training/records" RouterLink="/training/records">
+                培训记录
+            </MenuItem>
+        </ChildContent>
+    </SubMenu>
+    
+    <SubMenu Key="performance" Title="绩效管理">
+        <TitleTemplate>
+            <Icon Type="line-chart" />
+            <span>绩效管理</span>
+        </TitleTemplate>
+        <ChildContent>
+            <MenuItem Key="/performance/evaluation" RouterLink="/performance/evaluation">
+                绩效评估
+            </MenuItem>
+            <MenuItem Key="/performance/kpi" RouterLink="/performance/kpi">
+                KPI指标
+            </MenuItem>
+            <MenuItem Key="/performance/reports" RouterLink="/performance/reports">
+                绩效报告
+            </MenuItem>
+        </ChildContent>
+    </SubMenu>
+    
+    <SubMenu Key="system" Title="系统设置">
+        <TitleTemplate>
+            <Icon Type="setting" />
+            <span>系统设置</span>
+        </TitleTemplate>
+        <ChildContent>
+            <MenuItem Key="/system/organization" RouterLink="/system/organization">
+                组织架构
+            </MenuItem>
+            <MenuItem Key="/system/roles" RouterLink="/system/roles">
+                角色权限
+            </MenuItem>
+            <MenuItem Key="/system/users" RouterLink="/system/users">
+                用户管理
+            </MenuItem>
+            <MenuItem Key="/system/config" RouterLink="/system/config">
+                系统配置
+            </MenuItem>
+        </ChildContent>
+    </SubMenu>
+    
+</AntDesign.Menu>
+
+@code {
+    [Parameter]
+    public bool collapsed { get; set; }
+    
+    private string currentPath = "/";
+    
+    protected override void OnInitialized()
+    {
+        currentPath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        if (string.IsNullOrEmpty(currentPath))
+        {
+            currentPath = "/";
+        }
+        else if (!currentPath.StartsWith("/"))
+        {
+            currentPath = "/" + currentPath;
+        }
+    }
+}
