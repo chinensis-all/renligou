@@ -1,4 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Renligou.Boss.Components;
+using Renligou.Infras.Persistence;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +11,15 @@ builder.Services.AddRazorComponents()
 
 // 添加AntDesignBlazor服务
 builder.Services.AddAntDesign();
+
+// 配置MySQL数据库上下文
+builder.Services.AddDbContext<MySQLDBContext>(options =>
+{
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("Default"),
+        new MySqlServerVersion(new Version(8, 0, 36))   
+    );
+});
 
 var app = builder.Build();
 
