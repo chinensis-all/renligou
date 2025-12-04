@@ -1,0 +1,59 @@
+## 完成Boss布局Layout开发
+
+`src/Renligou.Boss`项目类型为`Asp.net Core Blazor Web`， 渲染模型为Server。 
+
+项目引入了`Ant Design Blazor`作为基础UI框架。
+
+定制主题位置`src/Renligou.Boss/wwwroot/app.css`,产生新的CSS也配置在这里, 尽量用var()应用:root中css，不要用字面量。
+
+主布局文件已创建`src/Renligou.Boss/Components/Layout/MainLayout.razor`， 目前为空
+
+主布局头部文件已创建`src/Renligou.Boss/Components/Layout/Header.razor`
+
+主布局底部文件已创建`src/Renligou.Boss/Components/Layout/Footer.razor`
+
+主布局菜单文件已创建`src/Renligou.Boss/Components/Layout/Menu.razor`
+
+你要根据下面的需求完善这个Layout:
+
+- 最小宽度1200px， 最小高度900px
+- 按照以下布局, 不是完全一样，根据需求调整
+```
+<Layout>
+        <Sider>Sider</Sider>
+        <Layout>
+            <Header>Header</Header>
+            <Content>Content</Content>
+            <Footer>Footer</Footer>
+        </Layout>
+</Layout>
+```
+
+- Sider宽度232px, 可折叠
+- Sider高度100vh
+- Sider上部展现站点Logo和标题
+- Sider下部展现菜单, 菜单你自己填充， 一级菜单带图标。
+- Sider下部菜单高度如果超过高度，则滚动，滚动条宽度只允许1px，颜色用成功色
+
+- Header左右两栏， 左栏目放折叠按钮和搜索框， 右栏依次放图标 全屏 站内信 邮件  头像
+- Header背景白色
+- Header固定在顶部
+- 全屏点击可以切换全屏和退出全屏， 注意图标也要切换
+- 站内信 邮件图标右上角弄个红色小气泡，显示未读数量
+- 点开站内信右侧弹出抽屉，列出未读站内信
+- 点开邮件图标右侧弹出抽屉，列出未读邮件
+- 头像点击下拉， 两个选项：个人资料， 退出登录， 两者中间放条分割线
+
+- Content + Footer占满剩余高度，如果content+footer高度超过剩余高度，则父容器滚动， 滚动条2px， 用灰色
+- Content + Footer如果小于剩余高度，则Footer贴底，我建议使用Flex布局。
+
+- content背景用--ant-layout-body-background
+- content padding: 36px
+
+- footer左右两栏，左栏放版权信息， 右栏链接依次是 关于我们  Repository  Issues
+- footer背景用白色
+
+要求：
+
+- 尽量都用Ant Design Blazor的组件
+- 我假设你是网页设计大师，你阅览了无数管理后台， 对间距，颜色， 细节有着卓越的追求。
