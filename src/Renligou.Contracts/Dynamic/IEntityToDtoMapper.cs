@@ -18,21 +18,13 @@
  * distribution of this code must also be licensed under the GPL. Failure
  * to comply with the terms of the GPL may result in legal action.
  */
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Renligou.Infras.Persistence
+namespace Renligou.Contracts.Dynamic
 {
-    /**
-     * MySQL数据库上下文
-     */
-    public class MySQLDBContext : DbContext
+    /// <summary>
+    /// EntityToDtoMapper: 实体到DTO映射器接口
+    /// </summary>
+    public interface IEntityToDtoMapper<TDto>
     {
-        public MySQLDBContext(DbContextOptions<MySQLDBContext> options)
-        : base(options)
-        {
-        }
+        void Map(object entity, TDto dto);
     }
 }

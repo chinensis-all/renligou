@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -9,6 +9,20 @@
 
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="1.5.0" />
+    <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.10.1" />
+    <PackageReference Include="xunit" Version="2.9.3" />
+    <PackageReference Include="ZiggyCreatures.FusionCache" Version="2.4.0" />
+    <PackageReference Include="ZiggyCreatures.FusionCache.Serialization.SystemTextJson" Version="2.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\core\Renligou.Application\Renligou.Application.csproj" />
+    <ProjectReference Include="..\core\Renligou.Domain\Renligou.Domain.csproj" />
+    <ProjectReference Include="..\core\Renligou.Infras\Renligou.Infras.csproj" />
+    <ProjectReference Include="..\Renligou.Contracts\Renligou.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
