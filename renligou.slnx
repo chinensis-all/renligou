@@ -19,4 +19,9 @@
     <Project Path="src/core/Renligou.Domain/Renligou.Domain.csproj" />
     <Project Path="src/core/Renligou.Infras/Renligou.Infras.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Renligou.Application.Tests/Renligou.Application.Tests.csproj" />
+    <Project Path="tests/Renligou.Domain.Tests/Renligou.Domain.Tests.csproj" />
+    <Project Path="tests/Renligou.Infras.Tests/Renligou.Infras.Tests.csproj" />
+  </Folder>
 </Solution>

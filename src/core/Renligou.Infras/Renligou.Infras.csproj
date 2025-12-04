@@ -6,4 +6,22 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.10.1" />
+    <PackageReference Include="StackExchange.Redis.Extensions.AspNetCore" Version="11.0.0" />
+    <PackageReference Include="StackExchange.Redis.Extensions.System.Text.Json" Version="11.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Persistence\Pos\" />
+    <Folder Include="Persistence\Repos\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Renligou.Contracts\Renligou.Contracts.csproj" />
+    <ProjectReference Include="..\Renligou.Application\Renligou.Application.csproj" />
+    <ProjectReference Include="..\Renligou.Domain\Renligou.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

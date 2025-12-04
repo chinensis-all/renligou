@@ -1,7 +1,13 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Renligou.Application.Dynamic;
 using Renligou.Boss.Components;
-using Renligou.Infras.Persistence;
-using System;
+using Renligou.Boss.Extensions;
+using Renligou.Infras.Persistence.EFcore;
+using StackExchange.Redis;
+using System.Text.Json;
+using ZiggyCreatures.Caching.Fusion;
+using ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,19 +15,42 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// 添加AntDesignBlazor服务
-builder.Services.AddAntDesign();
-
-// 配置MySQL数据库上下文
+// 配置MySQL连接
 builder.Services.AddDbContext<MySQLDBContext>(options =>
 {
+    string mysqlConnStr = builder.Configuration.GetConnectionString("Mysql") ?? throw new InvalidOperationException("配置文件中未找到 ConnectionStrings:Mysql，请检查 appsettings.json。");
     options.UseMySql(
-        builder.Configuration.GetConnectionString("Default"),
-        new MySqlServerVersion(new Version(8, 0, 36))   
-    );
+        mysqlConnStr,
+        ServerVersion.AutoDetect(mysqlConnStr)
+    ).UseSnakeCaseNamingConvention();
 });
 
+// 配置缓存及Redis连接
+string redisConnStr = builder.Configuration.GetConnectionString("Redis") ?? throw new InvalidOperationException("配置文件中未找到 ConnectionStrings:Redis，请检查 appsettings.json。");
+builder.Services.AddFusionCache()
+    .WithSerializer(
+        new FusionCacheSystemTextJsonSerializer(
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true } 
+        )
+    )
+    .WithDistributedCache(
+        new RedisCache(new RedisCacheOptions { Configuration = redisConnStr })
+    );
+
+// 注册服务
+builder.Services
+    .AddAntDesign()                                 // Ant Design Blazor
+    .AddSnowflake()                                 // 雪花算法ID生成器
+    .AddDynamicCrud()                               // 动态CRUD
+    ;
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var registry = scope.ServiceProvider.GetRequiredService<DynamicCrudRegistry>();
+    EntityConfigRegistrar.Register(registry);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
