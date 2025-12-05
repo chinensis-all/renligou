@@ -9,6 +9,9 @@
 
   <ItemGroup>
     <PackageReference Include="AntDesign" Version="1.5.0" />
+    <PackageReference Include="DotNetCore.CAP" Version="10.0.0" />
+    <PackageReference Include="DotNetCore.CAP.MySql" Version="8.3.2" />
+    <PackageReference Include="DotNetCore.CAP.RabbitMQ" Version="10.0.0" />
     <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />

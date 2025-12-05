@@ -1,28 +1,27 @@
-﻿﻿/**
- * Copyright (C) 2025 zhangxihai<mail@sniu.com>，All rights reserved.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- *
- * WARNING: This code is licensed under the GPL. Any derivative work or
- * distribution of this code must also be licensed under the GPL. Failure
- * to comply with the terms of the GPL may result in legal action.
- */
+﻿/**
+* Copyright (C) 2025 zhangxihai<mail@sniu.com>，All rights reserved.
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+*
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*
+* WARNING: This code is licensed under the GPL. Any derivative work or
+* distribution of this code must also be licensed under the GPL. Failure
+* to comply with the terms of the GPL may result in legal action.
+*/
+using DotNetCore.CAP;
 using Microsoft.Extensions.Logging;
-using Renligou.Contracts;
 using Renligou.Contracts.Dynamic;
 using Renligou.Contracts.Exceptions;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using ZiggyCreatures.Caching.Fusion;
@@ -42,17 +41,21 @@ namespace Renligou.Application.Dynamic
 
         private readonly ILogger _logger;
 
+        private readonly ICapPublisher _cap;
+
         public DynamicCrudService(
             IFusionCache cache,
             IDynamicCrudRepository repo,
             DynamicCrudRegistry registry,
-            ILogger<DynamicCrudService> logger
+            ILogger<DynamicCrudService> logger,
+            ICapPublisher cap
         )
         {
             _cache = cache;
             _repo = repo;
             _registry = registry;
             _logger = logger;
+            _cap = cap;
         }
 
         /// <summary>
@@ -76,6 +79,10 @@ namespace Renligou.Application.Dynamic
 
             if (e == null)
                 throw new InternalServerException(string.Format("创建{0}失败", cfg.Title));
+
+            // 发布Created事件
+            if (cfg.EnableCreatedEvent)
+                _ = _cap.PublishAsync(string.Format("DynamicCRUD.{0}.Created", cfg.EntityType.Name), request);
 
             // Dto == Entity
             if (cfg.DtoType == cfg.EntityType)
@@ -123,6 +130,10 @@ namespace Renligou.Application.Dynamic
             if (e == null)
                 throw new InternalServerException(string.Format("创建{0}失败", cfg.Title));
 
+            // 发布Created事件
+            if (cfg.EnableCreatedEvent)
+                _ = _cap.PublishAsync(string.Format("DynamicCRUD.{0}.Created", cfg.EntityType.Name), entity);
+
             // Dto == Entity
             if (cfg.DtoType == cfg.EntityType)
                 return RefConvert<object, TDto>(e);
@@ -165,6 +176,10 @@ namespace Renligou.Application.Dynamic
 
             if (e == null)
                 throw new InternalServerException(string.Format("更新{0}失败", cfg.Title));
+
+            // 发布Modified事件
+            if (cfg.EnableModifiedEvent)
+                _ = _cap.PublishAsync(string.Format("DynamicCRUD.{0}.Modified", cfg.EntityType.Name), request);
 
             if (cfg.EnableDetailCache)
             {
@@ -212,6 +227,10 @@ namespace Renligou.Application.Dynamic
             if (e == null)
                 throw new InternalServerException(string.Format("更新{0}失败", cfg.Title));
 
+            // 发布Modified事件
+            if (cfg.EnableModifiedEvent)
+                _ = _cap.PublishAsync(string.Format("DynamicCRUD.{0}.Modified", cfg.EntityType.Name), request);
+
             // Dto == Entity
             if (cfg.DtoType == cfg.EntityType)
                 return RefConvert<object, TDto>(e);
@@ -248,6 +267,11 @@ namespace Renligou.Application.Dynamic
             EntityConfig<TDto> cfg = _registry.Get<TDto>();
 
             bool res = await _repo.DeleteAsync(cfg.EntityType, cfg.KeyPropertyInfo, key, cfg.EnableSoftDelete);
+
+            // 发布Deleted或SoftDeleted事件
+            if (res && cfg.EnableSoftDelete)
+                _ = _cap.PublishAsync(string.Format(cfg.EnableSoftDelete ? "DynamicCRUD.{0}.SoftDeleted" : "DynamicCRUD.{0}.Deleted", cfg.EntityType.Name), key);
+
             if (res && cfg.EnableDetailCache)
             {
                 // 清除Detail缓存
@@ -272,6 +296,11 @@ namespace Renligou.Application.Dynamic
             var key = keyPropertyInfo.GetValue(entity)!;
 
             bool res = await _repo.DeleteAsync(cfg.EntityType, keyPropertyInfo, key, cfg.EnableSoftDelete);
+
+            // 发布Deleted或SoftDeleted事件
+            if (res && cfg.EnableSoftDelete)
+                _ = _cap.PublishAsync(string.Format(cfg.EnableSoftDelete ? "DynamicCRUD.{0}.SoftDeleted" : "DynamicCRUD.{0}.Deleted", cfg.EntityType.Name), key);
+
             if (res && cfg.EnableDetailCache)
             {
                 // 清除Detail缓存
