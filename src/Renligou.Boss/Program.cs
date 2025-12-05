@@ -1,13 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Renligou.Application.Dynamic;
 using Renligou.Boss.Components;
 using Renligou.Boss.Extensions;
 using Renligou.Infras.Persistence.EFcore;
-using StackExchange.Redis;
-using System.Text.Json;
-using ZiggyCreatures.Caching.Fusion;
-using ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,33 +10,20 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-// 配置MySQL连接
-builder.Services.AddDbContext<MySQLDBContext>(options =>
-{
-    string mysqlConnStr = builder.Configuration.GetConnectionString("Mysql") ?? throw new InvalidOperationException("配置文件中未找到 ConnectionStrings:Mysql，请检查 appsettings.json。");
-    options.UseMySql(
-        mysqlConnStr,
-        ServerVersion.AutoDetect(mysqlConnStr)
-    ).UseSnakeCaseNamingConvention();
-});
-
-// 配置缓存及Redis连接
+// 读取连接字符串
 string redisConnStr = builder.Configuration.GetConnectionString("Redis") ?? throw new InvalidOperationException("配置文件中未找到 ConnectionStrings:Redis，请检查 appsettings.json。");
-builder.Services.AddFusionCache()
-    .WithSerializer(
-        new FusionCacheSystemTextJsonSerializer(
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true } 
-        )
-    )
-    .WithDistributedCache(
-        new RedisCache(new RedisCacheOptions { Configuration = redisConnStr })
-    );
+string mysqlConnStr = builder.Configuration.GetConnectionString("Mysql") ?? throw new InvalidOperationException("配置文件中未找到 ConnectionStrings:Mysql，请检查 appsettings.json。");
+RabbitMQOptions rabbitMQOptions = builder.Configuration.GetSection("RabbitMQ").Get<RabbitMQOptions>() ?? throw new InvalidOperationException("配置文件中未找到 RabbitMQ 配置节，请检查 appsettings.json。");
+
 
 // 注册服务
 builder.Services
-    .AddAntDesign()                                 // Ant Design Blazor
-    .AddSnowflake()                                 // 雪花算法ID生成器
-    .AddDynamicCrud()                               // 动态CRUD
+    .AddAntDesign()                                                                       // Ant Design Blazor
+    .AddSnowflake()                                                                       // 雪花算法ID生成器
+    .AddCache(redisConnStr)                                                               // 缓存服务
+    .AddEventCap(rabbitMQOptions, mysqlConnStr)                                           // 一致性事件发布服务
+    .AddMysql(mysqlConnStr)                                                               // MySQL EFCore
+    .AddDynamicCrud()                                                                     // 动态CRUD
     ;
 
 var app = builder.Build();

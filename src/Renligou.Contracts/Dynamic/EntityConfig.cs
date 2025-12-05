@@ -70,6 +70,12 @@ namespace Renligou.Contracts.Dynamic
 
         public PropertyInfo OptionPropertyInfo { get; set; } = default!;                       // 查询选项属性名
 
+        public bool EnableCreatedEvent { get; set; } = true;                                   // 是否启用创建事件
+
+        public bool EnableModifiedEvent { get; set; } = true;                                  // 是否启用更新事件
+
+        public bool EnableDeletedEvent { get; set; } = true;                                   // 是否启用删除事件
+
 
         /// <summary>
         /// 获取详情缓存键
