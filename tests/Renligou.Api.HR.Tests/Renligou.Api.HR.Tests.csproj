@@ -17,6 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\api\Renligou.Api.HR\Renligou.Api.HR.csproj" />
+    <ProjectReference Include="..\..\src\core\Renligou.Core.Application\Renligou.Core.Application.csproj" />
+    <ProjectReference Include="..\..\src\core\Renligou.Core.Domain\Renligou.Core.Domain.csproj" />
+    <ProjectReference Include="..\..\src\core\Renligou.Core.Infrastructure\Renligou.Core.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\core\Renligou.Core.Shared\Renligou.Core.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
