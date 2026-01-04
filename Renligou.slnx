@@ -21,6 +21,9 @@
     <Project Path="src/interface/Renligou.Interface.HR/Renligou.Interface.HR.csproj" />
     <Project Path="src/interface/Renligou.Interface.User/Renligou.Interface.User.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Renligou.Api.HR.Tests/Renligou.Api.HR.Tests.csproj" />
+  </Folder>
   <Folder Name="/解决方案项/">
     <File Path=".gitignore" />
     <File Path="LICENSE" />
