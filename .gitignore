@@ -1,0 +1,96 @@
+## Visual Studio VCS folder
+.vs/
+
+## Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio user-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## Visual Studio backup files
+*.bak
+*.cache
+*.ilk
+*.pdb
+*.exp
+*.lib
+*.sbr
+*.tlog
+*.idb
+*.lastbuildstate
+
+## Visual Studio Profiler
+*.psess
+*.vsp
+*.vspx
+*.sap
+
+## Visual Studio Trace Files
+*.e2e
+
+## Visual Studio Server Explorer cache
+Visual Studio 2005-2017:
+*.vssscc
+Visual Studio 2019+:
+*.vspscc
+
+## Visual C++ cache files
+ipch/
+*.aps
+*.ncb
+*.opendb
+*.sdf
+*.cachefile
+*.VC.db
+*.VC.VC.opendb
+
+## Visual Studio Code
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+.history/
+
+## Web applications
+wwwroot/lib/
+node_modules/
+bower_components/
+
+## User-specific files
+*.dbmdl
+*.jfm
+
+## .NET Core
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ASP.NET Core
+ASPNETCore_Temp/
+
+## Others
+Thumbs.db
+.DS_Store
+*.swp
+*.lock
+[Pp]ublish/
+*.pubxml
+*.pubxml.user

@@ -1,0 +1,29 @@
+<Solution>
+  <Folder Name="/doc/" />
+  <Folder Name="/doc/agents/" />
+  <Folder Name="/doc/agents/skills/" />
+  <Folder Name="/doc/database/" />
+  <Folder Name="/src/" />
+  <Folder Name="/src/api/">
+    <Project Path="src/api/Renligou.Api.HR/Renligou.Api.HR.csproj" />
+    <Project Path="src/api/Renligou.Api.User/Renligou.Api.User.csproj" />
+  </Folder>
+  <Folder Name="/src/core/">
+    <Project Path="src/core/Renligou.Core.Application/Renligou.Core.Application.csproj" />
+    <Project Path="src/core/Renligou.Core.Domain/Renligou.Core.Domain.csproj" />
+    <Project Path="src/core/Renligou.Core.Infrastructure/Renligou.Core.Infrastructure.csproj" />
+    <Project Path="src/core/Renligou.Core.Shared/Renligou.Core.Shared.csproj" />
+  </Folder>
+  <Folder Name="/src/interface/">
+    <Project Path="src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss.Shared/Renligou.Interface.Boss.Shared.csproj" />
+    <Project Path="src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss.Web/Renligou.Interface.Boss.Web.csproj" />
+    <Project Path="src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss/Renligou.Interface.Boss.csproj" />
+    <Project Path="src/interface/Renligou.Interface.HR/Renligou.Interface.HR.csproj" />
+    <Project Path="src/interface/Renligou.Interface.User/Renligou.Interface.User.csproj" />
+  </Folder>
+  <Folder Name="/解决方案项/">
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="README.nd" />
+  </Folder>
+</Solution>
