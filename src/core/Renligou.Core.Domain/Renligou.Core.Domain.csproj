@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Renligou.Core.Infrastructure\Renligou.Core.Infrastructure.csproj" />
+    <ProjectReference Include="..\Renligou.Core.Shared\Renligou.Core.Shared.csproj" />
+  </ItemGroup>
+
 </Project>
