@@ -1,6 +1,1 @@
 @Renligou.Api.Boss_HostAddress = http://localhost:5010
-
-GET {{Renligou.Api.Boss_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
