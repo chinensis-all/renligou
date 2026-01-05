@@ -1,5 +1,5 @@
 using System.Collections.Concurrent;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection; 
 using Renligou.Core.Application.Bus.Internal;
 using Renligou.Core.Shared.Bus;
 using Renligou.Core.Shared.Commanding;

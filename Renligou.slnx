@@ -1,10 +1,15 @@
 <Solution>
   <Folder Name="/doc/" />
   <Folder Name="/doc/agents/" />
-  <Folder Name="/doc/agents/skills/" />
-  <Folder Name="/doc/database/" />
+  <Folder Name="/doc/agents/skills/">
+    <File Path="doc/agents/CommandBus&amp;QueryBus.md" />
+  </Folder>
+  <Folder Name="/doc/database/">
+    <File Path="doc/database/schema.sql" />
+  </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/api/">
+    <Project Path="src/api/Renligou.Api.Boss/Renligou.Api.Boss.csproj" Id="e12f1444-d7ee-4ad8-ad9c-6578a9f85701" />
     <Project Path="src/api/Renligou.Api.HR/Renligou.Api.HR.csproj" />
     <Project Path="src/api/Renligou.Api.User/Renligou.Api.User.csproj" />
   </Folder>
@@ -22,7 +27,11 @@
     <Project Path="src/interface/Renligou.Interface.User/Renligou.Interface.User.csproj" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="tests/Renligou.Api.HR.Tests/Renligou.Api.HR.Tests.csproj" />
+    <Project Path="tests/Renligou.Api.HR.Tests/Renligou.Api.HR.Tests.csproj" Id="6d02c29e-0402-4176-8a77-5ad3c9d8c02b" />
+    <Project Path="tests/Renligou.Api.User.Tests/Renligou.Api.User.Tests.csproj" Id="c6895f46-07cb-4f11-84c0-4c8d4aa72ab5" />
+    <Project Path="tests/Renligou.Core.Application.Tests/Renligou.Core.Application.Tests.csproj" Id="19c59d54-4e2e-4ca7-9315-b41c55d73d77" />
+    <Project Path="tests/Renligou.Core.Domain.Tests/Renligou.Core.Domain.Tests.csproj" Id="c6491ff2-d8ee-44c9-a2f2-61654b513e57" />
+    <Project Path="tests/Renligou.Core.Infrastructure.Tests/Renligou.Core.Infrastructure.Tests.csproj" Id="ea51a3f3-5f21-4441-b508-ba66620eae27" />
   </Folder>
   <Folder Name="/解决方案项/">
     <File Path=".gitignore" />
