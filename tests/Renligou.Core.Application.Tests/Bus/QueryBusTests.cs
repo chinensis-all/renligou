@@ -67,6 +67,15 @@ public class QueryBusTests
         Assert.That(result, Is.EqualTo(-1)); // Handler returns -1 if cancelled
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        if (_serviceProvider is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+    }
+
     private void RefreshBus()
     {
         _serviceProvider = _services.BuildServiceProvider();

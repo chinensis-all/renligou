@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.2.0" />
     <PackageReference Include="StackExchange.Redis" Version="2.10.1" />
     <PackageReference Include="StackExchange.Redis.Extensions.AspNetCore" Version="11.0.0" />
     <PackageReference Include="StackExchange.Redis.Extensions.System.Text.Json" Version="11.0.0" />

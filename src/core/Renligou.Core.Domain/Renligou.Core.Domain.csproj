@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Renligou.Core.Shared\Renligou.Core.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="EventingContext\Model\" />
+  </ItemGroup>
+
 </Project>
