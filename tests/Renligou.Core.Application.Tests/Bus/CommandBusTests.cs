@@ -101,6 +101,15 @@ public class CommandBusTests
         Assert.That(handler.TokenState, Is.True);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        if (_serviceProvider is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
+    }
+
     private void RefreshBus()
     {
         _serviceProvider = _services.BuildServiceProvider();

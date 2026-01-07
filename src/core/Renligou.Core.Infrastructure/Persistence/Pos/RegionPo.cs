@@ -10,7 +10,6 @@ namespace Renligou.Core.Infrastructure.Persistence.Pos
     public class RegionPo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public long Id { get; set; }
 
         public long ParentId { get; set; } = 0;

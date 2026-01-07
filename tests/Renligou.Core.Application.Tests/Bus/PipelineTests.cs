@@ -9,15 +9,24 @@ namespace Renligou.Core.Application.Tests.Bus;
 [TestFixture]
 public class PipelineTests
 {
-    private IServiceCollection _services;
-    private IServiceProvider _serviceProvider;
-    private ICommandBus _bus;
+    private IServiceCollection _services = null!;
+    private IServiceProvider _serviceProvider = null!;
+    private ICommandBus _bus = null!;
 
     [SetUp]
     public void SetUp()
     {
         _services = new ServiceCollection();
         _services.AddScoped<ICommandBus, CommandBus>();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        if (_serviceProvider is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 
     [Test]
