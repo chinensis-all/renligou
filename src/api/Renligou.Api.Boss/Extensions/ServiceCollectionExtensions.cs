@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection; 
-using Scrutor; 
 using Renligou.Core.Application.Bus;
 using Renligou.Core.Infrastructure.Persistence.EFCore;
 using Renligou.Core.Shared.Bus;
 using Renligou.Core.Shared.Commanding;
 using Renligou.Core.Shared.Common;
+using Renligou.Core.Shared.EFCore;
 using Renligou.Core.Shared.Querying;
+using Scrutor; 
 using System.Reflection;
 
 namespace Renligou.Api.Boss.Extensions
@@ -48,6 +49,7 @@ namespace Renligou.Api.Boss.Extensions
             });
 
             services.AddScoped<DbContext>(provider => provider.GetRequiredService<MysqlDbContext>());
+            services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
             return services;
         }

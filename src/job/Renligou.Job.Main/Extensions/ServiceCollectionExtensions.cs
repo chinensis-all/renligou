@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MassTransit;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Renligou.Core.Application.Bus;
 using Renligou.Core.Infrastructure.Persistence.EFCore;
 using Renligou.Core.Shared.Bus;
@@ -6,9 +8,11 @@ using Renligou.Core.Shared.Commanding;
 using Renligou.Core.Shared.Common;
 using Renligou.Core.Shared.EFCore;
 using Renligou.Core.Shared.Querying;
+using Renligou.Job.Main.Kernel;
+using Scrutor;
 using System.Reflection;
 
-namespace Renligou.Api.HR.Extensions
+namespace Renligou.Job.Main.Extensions
 {
     /// <summary>
     /// Provides extension methods for registering MySQL database contexts with an IServiceCollection.
@@ -27,8 +31,6 @@ namespace Renligou.Api.HR.Extensions
 
             services.AddDbContext<MysqlDbContext>(options =>
             {
-                // 停止使用 AutoDetect，因为它在启动时需要活动的数据库连接，
-                // 如果数据库暂时不可用，会导致应用程序在构建 ServiceProvider 时崩溃。
                 var serverVersion = new MySqlServerVersion(new Version(8, 0, 31));
 
                 options.UseMySql(mysqlConnStr, serverVersion)
@@ -111,6 +113,18 @@ namespace Renligou.Api.HR.Extensions
                .AsSelf()
                .WithScopedLifetime()
             );
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds the outbox worker as a hosted service to the specified service collection.
+        /// </summary>
+        /// <param name="services">The service collection to which the outbox worker will be added. Cannot be null.</param>
+        /// <returns>The same instance of <see cref="IServiceCollection"/> that was provided, to support method chaining.</returns>
+        public static IServiceCollection AddWorkers(this IServiceCollection services)
+        {
+            services.AddHostedService<OutboxWorker>();
 
             return services;
         }
