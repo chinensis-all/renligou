@@ -1,4 +1,5 @@
-﻿using Renligou.Core.Application.Kernel.Queries;
+﻿using Renligou.Core.Application.Kernel.Handlers;
+using Renligou.Core.Application.Kernel.Queries;
 
 namespace Renligou.Core.Application.Kernel
 {

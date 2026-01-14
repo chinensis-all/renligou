@@ -2,92 +2,92 @@ CREATE DATABASE IF NOT EXISTS `renligou` DEFAULT CHARACTER SET utf8mb4 COLLATE u
 USE `renligou`;
 SET NAMES utf8mb4;
 
--- ¿É¿¿ÊÂ¼þ´«µÝ±í
+-- äº‹ä»¶å­˜å‚¨è¡¨
 DROP TABLE IF EXISTS `_events`;
 CREATE TABLE IF NOT EXISTS `_events`
 (
-    `id`             BIGINT  AUTO_INCREMENT PRIMARY KEY COMMENT '·Ö²¼Ê½Î¨Ò»ID',
-    `category`       ENUM('APPLICATION', 'DOMAIN')             NOT NULL COMMENT 'ÊÂ¼þÀà±ð (APPLICATION=Ó¦ÓÃ²ãÊÂ¼þ, DOMAIN=ÁìÓò²ãÊÂ¼þ)',
-    `source_type`    VARCHAR(255)                              NOT NULL COMMENT 'À´Ô´ÀàÐÍ',
-    `source_id`      VARCHAR(64)                               NOT NULL COMMENT 'À´Ô´ID',
-    `event_type`     VARCHAR(255)                              NOT NULL COMMENT 'ÊÂ¼þÀàÐÍ',
-    `payload`        JSON                                      NOT NULL COMMENT 'ÊÂ¼þ¸ºÔØ',
-    `status`         ENUM ('NEW', 'SENDING', 'SENT', 'FAILED') NOT NULL DEFAULT 'NEW' COMMENT 'ÊÂ¼þ×´Ì¬ (NEW=´ý·¢²¼, SENDING=·¢²¼ÖÐ, SENT=ÒÑ·¢²¼, FAILED=·¢²¼Ê§°Ü)',
-    `retry_count`    INT                                       NOT NULL DEFAULT 0 COMMENT 'ÖØÊÔ´ÎÊý',
-    `occurred_at`    DATETIME(6)                               NOT NULL COMMENT 'ÊÂ¼þ·¢ÉúÊ±¼ä',
-    `sent_at`        DATETIME(6)                               NULL     COMMENT '·¢ËÍÍê³ÉÊ±¼ä',
-    `created_at`     DATETIME(6)                               NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT '´´½¨Ê±¼ä',
-    `updated_at`     DATETIME(6)                               NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT '¸üÐÂÊ±¼ä',
-    `version`        BIGINT                                    NOT NULL DEFAULT 0 COMMENT 'ÀÖ¹ÛËø°æ±¾ºÅ',
+    `id`          BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT 'ID',
+    `category`    ENUM ('APPLICATION', 'DOMAIN')            NOT NULL COMMENT 'äº‹ä»¶åˆ†ç±»ï¼ˆAPPLICATION=åº”ç”¨å±‚æ—¶é—´ï¼ŒDOMAIN=é¢†åŸŸäº‹ä»¶ï¼‰',
+    `source_type` VARCHAR(255)                              NOT NULL COMMENT 'äº‹ä»¶æºç±»åž‹',
+    `source_id`   VARCHAR(64)                               NOT NULL COMMENT 'äº‹ä»¶æºID',
+    `event_type`  VARCHAR(255)                              NOT NULL COMMENT 'äº‹ä»¶ç±»åž‹',
+    `payload`     JSON                                      NOT NULL COMMENT 'äº‹ä»¶å˜åŠ¨å†…å®¹',
+    `status`      ENUM ('NEW', 'SENDING', 'SENT', 'FAILED') NOT NULL DEFAULT 'NEW' COMMENT 'äº‹ä»¶çŠ¶æ€ï¼ˆNEW=æ–°å»ºï¼ŒSENDING=å‘é€ä¸­ï¼ŒSENT=å·²å‘é€ï¼ŒFAILED=å‘é€å¤±è´¥ï¼‰',
+    `retry_count` INT                                       NOT NULL DEFAULT 0 COMMENT 'é‡è¯•æ¬¡æ•°',
+    `occurred_at` DATETIME(6)                               NOT NULL COMMENT 'äº‹ä»¶å‘ç”Ÿäº‹ä»¶',
+    `sent_at`     DATETIME(6)                               NULL COMMENT 'äº‹ä»¶å‘é€äº‹ä»¶',
+    `created_at`  DATETIME(6)                               NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT 'åˆ›å»ºæ—¶é—´',
+    `updated_at`  DATETIME(6)                               NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6) COMMENT 'æ›´æ–°æ—¶é—´',
+    `version`     BIGINT                                    NOT NULL DEFAULT 0 COMMENT 'ä¹è§‚é”ç‰ˆæœ¬å·',
     INDEX `idx_outbox_status_created` (`status`, `created_at`) USING BTREE,
     INDEX `idx_outbox_source` (`source_type`, `source_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT '¿É¿¿ÊÂ¼þ´«µÝ(Outbox)±í';
+  COLLATE = utf8mb4_unicode_ci COMMENT 'äº‹ä»¶å­˜å‚¨è¡¨(Outbox)';
 
--- ÒÑ´¦ÀíÏûÏ¢±í
+-- æ¶ˆè´¹æ¶ˆæ¯è¡¨
 DROP TABLE IF EXISTS `_processed_messages`;
 CREATE TABLE IF NOT EXISTS `_processed_messages`
 (
     `id`            BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT "ID",
-    `consumer_name` VARCHAR(255) NOT NULL COMMENT "Ïû·ÑÕßÃû³Æ",
-    `message_id`    VARCHAR(128) NOT NULL COMMENT "ÏûÏ¢ID",
-    `processed_at`  DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT "Ëø¶¨Ê±¼ä",
+    `consumer_name` VARCHAR(255) NOT NULL COMMENT "æ¶ˆè´¹è€…åç§°",
+    `message_id`    VARCHAR(128) NOT NULL COMMENT "æ¶ˆæ¯ID",
+    `processed_at`  DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6) COMMENT "æ¶ˆè´¹æ—¶é—´",
     UNIQUE KEY `uk_consumer_message` (`consumer_name`, `message_id`)
-) ENGINE = InnoDB COMMENT ='ÒÑ´¦ÀíÏûÏ¢±í';
+) ENGINE = InnoDB COMMENT ='æ¶ˆè´¹æ¶ˆæ¯è¡¨';
 
--- ÖÐ¹úÐÐÕþÇø»®±í
+-- ä¸­å›½è¡Œæ”¿åŒºåˆ’è¡¨
 DROP TABLE IF EXISTS `regions`;
 CREATE TABLE `regions`
 (
-    `id`           BIGINT UNSIGNED                         NOT NULL COMMENT 'ÐÐÕþ±àÂë',
-    `parent_id`    BIGINT UNSIGNED                         NOT NULL DEFAULT '0' COMMENT 'ÉÏ¼¶ÐÐÕþ±àÂë',
-    `region_level` TINYINT(1) UNSIGNED                     NOT NULL DEFAULT '1' COMMENT 'ÐÐÕþÇø»®¼¶±ð 1:Ê¡ 2:ÊÐ 3:Çø/ÏØ 4:Õò/½ÖµÀ 5:´å/ÉçÇø',
-    `postal_code`  CHAR(6)                                 NOT NULL DEFAULT '' COMMENT 'ÓÊÕþ±àÂë',
-    `area_code`    CHAR(6)                                 NOT NULL DEFAULT '' COMMENT 'ÇøºÅ',
-    `region_name`  VARCHAR(50)                             NOT NULL DEFAULT '' COMMENT 'ÐÐÕþÇø»®Ãû³Æ',
-    `name_pinyin`  VARCHAR(255)                            NOT NULL DEFAULT '' COMMENT 'ÐÐÕþÇø»®Ãû³ÆÆ´Òô',
-    `short_name`   VARCHAR(50)                             NOT NULL DEFAULT '' COMMENT 'ÐÐÕþÇø»®¼ò³Æ',
-    `merge_name`   VARCHAR(255)                            NOT NULL DEFAULT '' COMMENT 'ÐÐÕþÇø»®×éºÏÃû³Æ',
-    `longitude`    DECIMAL(10, 6)                          NOT NULL DEFAULT '0.000000' COMMENT '¾­¶È',
-    `latitude`     DECIMAL(10, 6)                          NOT NULL DEFAULT '0.000000' COMMENT 'Î³¶È',
+    `id`           BIGINT UNSIGNED     NOT NULL COMMENT 'ID',
+    `parent_id`    BIGINT UNSIGNED     NOT NULL DEFAULT '0' COMMENT 'çˆ¶',
+    `region_level` TINYINT(1) UNSIGNED NOT NULL DEFAULT '1' COMMENT 'çº§åˆ« 1:çœ 2:å¸‚ 3:åŒº/åŽ¿ 4:é•‡/è¡—é“ 5:æ‘/ç¤¾åŒº',
+    `postal_code`  CHAR(6)             NOT NULL DEFAULT '' COMMENT 'é‚®æ”¿ç¼–ç ',
+    `area_code`    CHAR(6)             NOT NULL DEFAULT '' COMMENT 'åŒºå·',
+    `region_name`  VARCHAR(50)         NOT NULL DEFAULT '' COMMENT 'åŒºåˆ’åç§°',
+    `name_pinyin`  VARCHAR(255)        NOT NULL DEFAULT '' COMMENT 'åŒºåˆ’åç§°æ‹¼éŸ³',
+    `short_name`   VARCHAR(50)         NOT NULL DEFAULT '' COMMENT 'ç®€ç§°',
+    `merge_name`   VARCHAR(255)        NOT NULL DEFAULT '' COMMENT 'åˆå¹¶åç§°',
+    `longitude`    DECIMAL(10, 6)      NOT NULL DEFAULT '0.000000' COMMENT 'ç²¾åº¦',
+    `latitude`     DECIMAL(10, 6)      NOT NULL DEFAULT '0.000000' COMMENT 'ç»´åº¦',
     PRIMARY KEY (`id`),
-    KEY `idx_parent_id` (`parent_id`) USING BTREE COMMENT 'ÉÏ¼¶ÐÐÕþ±àÂëË÷Òý'
+    KEY `idx_parent_id` (`parent_id`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='ÖÐ¹úÐÐÕþÇø»®±í';
+  COLLATE = utf8mb4_unicode_ci COMMENT ='ä¸­å›½è¡Œæ”¿åŒºåˆ’è¡¨';
 
--- ¹«Ë¾/·Ö¹«Ë¾±í
+-- å…¬å¸/å­å…¬å¸/åˆ†å…¬å¸è¡¨
 DROP TABLE IF EXISTS `companies`;
 CREATE TABLE IF NOT EXISTS `companies`
 (
-    `id`                 BIGINT       NOT NULL PRIMARY KEY COMMENT 'Ö÷¼üID',
-    `company_type`       VARCHAR(32)  NOT NULL COMMENT '¹«Ë¾ÀàÐÍ: HEADQUARTER(×Ü¹«Ë¾) / BRANCH(·Ö¹«Ë¾) / SUBSIDIARY(×Ó¹«Ë¾£¬¶ÀÁ¢·¨ÈËÊµÌå)',
-    `company_code`       VARCHAR(64)  NOT NULL COMMENT '¹«Ë¾±àÂë£¨ÒµÎñÎ¨Ò»£©',
-    `company_name`       VARCHAR(128) NOT NULL COMMENT '¹«Ë¾Ãû³Æ',
-    `company_short_name` VARCHAR(64)           DEFAULT '' COMMENT '¹«Ë¾¼ò³Æ',
-    `legal_person_name`  VARCHAR(64)           DEFAULT '' COMMENT '·¨ÈËÐÕÃû',
-    `credit_code`        VARCHAR(32)           DEFAULT '' COMMENT 'Í³Ò»Éç»áÐÅÓÃ´úÂë',
-    `registered_address` VARCHAR(256)          DEFAULT '' COMMENT '×¢²áµØÖ·',
-    `remark`             VARCHAR(512)          DEFAULT '' COMMENT '±¸×¢',
-    `created_at`         DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '´´½¨Ê±¼ä',
-    `updated_at`         DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '¸üÐÂÊ±¼ä',
+    `id`                 BIGINT                                       NOT NULL PRIMARY KEY COMMENT 'ID',
+    `company_type`       ENUM ('HEADQUARTER', 'BRANCH', 'SUBSIDIARY') NOT NULL COMMENT 'å…¬å¸ç±»åž‹: HEADQUARTER(æ€»å…¬å¸) / BRANCH(åˆ†å…¬å¸) / SUBSIDIARY(å­å…¬å¸)',
+    `company_code`       VARCHAR(64)                                  NOT NULL COMMENT 'å…¬å¸ç¼–ç ',
+    `company_name`       VARCHAR(128)                                 NOT NULL COMMENT 'å…¬å¸åç§°',
+    `company_short_name` VARCHAR(64)                                           DEFAULT '' COMMENT 'å…¬å¸åç®€ç§°',
+    `legal_person_name`  VARCHAR(64)                                           DEFAULT '' COMMENT 'æ³•äºº',
+    `credit_code`        VARCHAR(32)                                           DEFAULT '' COMMENT 'ç»Ÿä¸€ç¤¾ä¼šä¿¡ç”¨ä»£ç ',
+    `registered_address` VARCHAR(256)                                          DEFAULT '' COMMENT 'æ³¨å†Œåœ°å€',
+    `remark`             VARCHAR(512)                                          DEFAULT '' COMMENT 'å¤‡æ³¨',
+    `created_at`         DATETIME                                     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'åˆ›å»ºæ—¶é—´',
+    `updated_at`         DATETIME                                     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'æ›´æ–°æ—¶é—´',
 
-    -- ËùÔÚµØÖ·(address)
-    `province_id`        BIGINT                DEFAULT NULL COMMENT 'Ê¡·ÝID',
-    `province`           VARCHAR(50)           DEFAULT '' COMMENT 'Ê¡·ÝÃû³Æ',
-    `city_id`            BIGINT                DEFAULT NULL COMMENT '³ÇÊÐID',
-    `city`               VARCHAR(50)           DEFAULT '' COMMENT '³ÇÊÐÃû³Æ',
-    `district_id`        BIGINT                DEFAULT NULL COMMENT 'ÇøÏØID',
-    `district`           VARCHAR(50)           DEFAULT '' COMMENT 'ÇøÏØÃû³Æ',
-    `complated_address`  VARCHAR(256)          DEFAULT '' COMMENT 'ÏêÏ¸µØÖ·',
+    -- åœ°å€ä¿¡æ¯ï¼ˆaddressï¼‰
+    `province_id`        BIGINT                                       NOT NULL DEFAULT 0 COMMENT 'æ‰€å±žçœä»½ID',
+    `province`           VARCHAR(50)                                  NOT NULL DEFAULT '' COMMENT 'æ‰€å±žçœä»½',
+    `city_id`            BIGINT                                       NOT NULL DEFAULT 0 COMMENT 'æ‰€å±žåŸŽå¸‚ID',
+    `city`               VARCHAR(50)                                  NOT NULL DEFAULT '' COMMENT 'æ‰€å±žåŸŽå¸‚',
+    `district_id`        BIGINT                                       NOT NULL DEFAULT 0 COMMENT 'æ‰€å±žåŒºåŽ¿ID',
+    `district`           VARCHAR(50)                                  NOT NULL DEFAULT 0 COMMENT 'æ‰€å±žåŒºåŽ¿',
+    `completed_address`  VARCHAR(256)                                 NOT NULL DEFAULT '' COMMENT 'å®Œæ•´åœ°å€',
 
-    -- ÆôÓÃ×´Ì¬¼°ÓÐÐ§ÆÚ(state)
-    `enabled`            TINYINT(1)            NOT NULL DEFAULT 1 COMMENT 'ÊÇ·ñÆôÓÃ',
-    `effective_date`     DATE                  DEFAULT NULL COMMENT 'ÉúÐ§ÈÕÆÚ',
-    `expired_date`       DATE                  DEFAULT NULL COMMENT 'Ê§Ð§ÈÕÆÚ',
-    KEY `idx_company_code` (`company_code`) USING BTREE£¬
-    KEY `idx_company_name` (`company_name`) USING BTREE
+    -- å¯ç”¨çŠ¶æ€ï¼ˆstate)
+    `enabled`            TINYINT(1)                                   NOT NULL DEFAULT 1 COMMENT 'æ˜¯å¦å¯ç”¨: 1=å¯ç”¨, 0=ç¦ç”¨',
+    `effective_date`     DATE                                                  DEFAULT NULL COMMENT 'ç”Ÿæ•ˆæ—¥æœŸ',
+    `expired_date`       DATE                                                  DEFAULT NULL COMMENT 'å¤±æ•ˆæ—¥æœŸ',
+    KEY `idx_company_code` (`company_code`) USING BTREE,
+    UNIQUE KEY `uk_company_name` (`company_name`) USING BTREE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
-  COLLATE = utf8mb4_unicode_ci COMMENT ='¹«Ë¾/·Ö¹«Ë¾±í';
+  COLLATE = utf8mb4_unicode_ci COMMENT ='å…¬å¸/å­å…¬å¸/åˆ†å…¬å¸è¡¨';

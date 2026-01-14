@@ -1,8 +1,9 @@
-﻿using Renligou.Core.Domain.EventingContext.Repo;
+﻿using Renligou.Core.Application.Kernel.Commands;
+using Renligou.Core.Domain.EventingContext.Repo;
 using Renligou.Core.Shared.Commanding;
 using Renligou.Core.Shared.Events;
 
-namespace Renligou.Core.Application.Kernel.Commands
+namespace Renligou.Core.Application.Kernel.Handlers
 {
     /// <summary>
     /// Handles the creation of outbox entries by processing integration events collected during command execution.

@@ -1,15 +1,28 @@
-﻿using MassTransit;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Renligou.Core.Application.Bus;
+using Renligou.Core.Infrastructure.Cache;
+using Renligou.Core.Infrastructure.Data.Connections;
+using Renligou.Core.Infrastructure.Data.Inbox;
+using Renligou.Core.Infrastructure.Data.Outbox;
+using Renligou.Core.Infrastructure.Event;
+using Renligou.Core.Infrastructure.External.Metrics;
 using Renligou.Core.Infrastructure.Persistence.EFCore;
+using Renligou.Core.Infrastructure.Shared.Id;
 using Renligou.Core.Shared.Bus;
+using Renligou.Core.Shared.Ddd;
+using Renligou.Core.Shared.Cache;
 using Renligou.Core.Shared.Commanding;
 using Renligou.Core.Shared.Common;
 using Renligou.Core.Shared.EFCore;
 using Renligou.Core.Shared.Querying;
 using Renligou.Job.Main.Kernel;
 using Scrutor;
+using StackExchange.Redis;
 using System.Reflection;
 
 namespace Renligou.Job.Main.Extensions
@@ -22,8 +35,54 @@ namespace Renligou.Job.Main.Extensions
     /// application startup to configure database connectivity and related options.</remarks>
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddMysql(this IServiceCollection services, string mysqlConnStr, bool isDevelepment, string environmentName)
+        public static IServiceCollection AddJobServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
         {
+            services.AddIdGenerator(configuration);
+
+            services.AddMysql(configuration, environment);
+
+            services.AddSingleton<IDbConnectionFactory, MySqlConnectionFactory>();
+
+            services.AddRepository(new[]
+            {
+                typeof(Renligou.Core.Infrastructure.InfrastructureLayer).Assembly
+            });
+
+            services.AddBus(new[]
+            {
+                typeof(Renligou.Core.Application.ApplicationLayer).Assembly
+            });
+
+            services.AddAppFacade(new[]
+            {
+                typeof(Renligou.Core.Application.ApplicationLayer).Assembly
+            });
+
+            services.AddSingleton<RabbitMqConnection>();
+
+            services.AddSingleton<IEventPublisher, RabbitMqEventPublisher>();
+
+            services.AddScoped<IOutboxDapperRepository, OutboxDapperRepository>();
+
+            services.AddScoped<IIdempotencyService, MySqlIdempotencyService>();
+
+            services.AddWorkers();
+
+            services.AddCache(configuration);
+
+            return services;
+        }
+
+        public static IServiceCollection AddIdGenerator(this IServiceCollection services, IConfiguration configuration)
+        {
+            var workerId = configuration.GetValue<long>("WorkerId");
+            services.AddSingleton<IIdGenerator>(new SnowflakeId(workerId));
+            return services;
+        }
+
+        public static IServiceCollection AddMysql(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+        {
+            string mysqlConnStr = configuration.GetConnectionString("Mysql")!;
             if (string.IsNullOrEmpty(mysqlConnStr))
             {
                 throw new ArgumentException("MySQL connection string is missing.", nameof(mysqlConnStr));
@@ -36,13 +95,13 @@ namespace Renligou.Job.Main.Extensions
                 options.UseMySql(mysqlConnStr, serverVersion)
                        .UseSnakeCaseNamingConvention();
 
-                if (isDevelepment || environmentName == "Testing")
+                if (environment.IsDevelopment() || environment.IsEnvironment("Testing"))
                 {
                     options
                         .EnableSensitiveDataLogging()
                         .EnableDetailedErrors()
                         .LogTo(Console.WriteLine,
-                            new[] { Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.CommandExecuted, Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.CommandError },
+                            new[] { RelationalEventId.CommandExecuted, RelationalEventId.CommandError },
                             LogLevel.Information
                         );
                 }
@@ -59,8 +118,13 @@ namespace Renligou.Job.Main.Extensions
         /// </summary>
         public static IServiceCollection AddBus(this IServiceCollection services, Assembly[] assemblies)
         {
+            services.AddSingleton<IQueryMetrics, InMemoryQueryMetrics>();
+
             services.AddScoped<ICommandBus, CommandBus>();
             services.AddScoped<IQueryBus, QueryBus>();
+            services.Decorate<IQueryBus, LoggingQueryBus>();
+            services.Decorate<IQueryBus, MetricsQueryBus>();
+            services.Decorate<IQueryBus, CachingQueryBus>();
 
             services.Scan(scan => scan
                 .FromAssemblies(assemblies)
@@ -125,6 +189,37 @@ namespace Renligou.Job.Main.Extensions
         public static IServiceCollection AddWorkers(this IServiceCollection services)
         {
             services.AddHostedService<OutboxWorker>();
+
+            return services;
+        }
+
+        /// <summary>
+        /// Adds in-memory, Redis, and no-op cache implementations to the service collection and configures the default
+        /// cache provider.
+        /// </summary>
+        public static IServiceCollection AddCache(this IServiceCollection services, IConfiguration configuration)
+        {
+            var providerName = configuration["Cache:Provider"] ?? CacheKeys.Memory;
+            var redisConnStr = configuration.GetConnectionString("Redis");
+
+            // 内存
+            services.AddMemoryCache();
+            services.AddKeyedSingleton<ICache, MemoryCacheAdapter>(CacheKeys.Memory);
+
+            // Redis
+            if (!string.IsNullOrEmpty(redisConnStr))
+            {
+                services.AddSingleton<IConnectionMultiplexer>(ConnectionMultiplexer.Connect(redisConnStr));
+                services.AddKeyedSingleton<ICache, RedisCacheAdapter>(CacheKeys.Redis);
+            }
+
+            // 无缓存
+            services.AddKeyedSingleton<ICache, NoopCacheAdapter>(CacheKeys.None);
+
+            services.AddSingleton<ICache>(sp =>
+            {
+                return sp.GetRequiredKeyedService<ICache>(providerName);
+            });
 
             return services;
         }

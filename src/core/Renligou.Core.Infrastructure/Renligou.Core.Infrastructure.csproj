@@ -9,6 +9,7 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.1" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageReference Include="RabbitMQ.Client" Version="7.2.0" />
@@ -21,6 +22,10 @@
     <ProjectReference Include="..\Renligou.Core.Application\Renligou.Core.Application.csproj" />
     <ProjectReference Include="..\Renligou.Core.Domain\Renligou.Core.Domain.csproj" />
     <ProjectReference Include="..\Renligou.Core.Shared\Renligou.Core.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Security\" />
   </ItemGroup>
 
 </Project>
