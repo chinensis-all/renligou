@@ -12,5 +12,7 @@ namespace Renligou.Core.Infrastructure.Persistence.EFCore
         public DbSet<RegionPo> regions { get; set; }                                       // 中国行政区划表
 
         public DbSet<OutboxPo> outboxes { get; set; }                                      // 可靠事件表
+
+        public DbSet<CompanyPo> companies { get; set; }                                    // 企业信息表
     }
 }

@@ -10,8 +10,8 @@
         public string Payload { get; set; } = default!;
         public string Status { get; set; } = default!;
         public int RetryCount { get; set; }
-        public DateTime OccurredAt { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset OccurredAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
         public long Version { get; set; }
     }
 }

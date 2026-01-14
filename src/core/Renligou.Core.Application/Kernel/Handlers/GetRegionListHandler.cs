@@ -1,6 +1,7 @@
-﻿using Renligou.Core.Shared.Querying;
+﻿using Renligou.Core.Application.Kernel.Queries;
+using Renligou.Core.Shared.Querying;
 
-namespace Renligou.Core.Application.Kernel.Queries
+namespace Renligou.Core.Application.Kernel.Handlers
 {
     public class GetRegionListHandler : IQueryHandler<GetRegionListQuery, List<RegionDto>>
     {
