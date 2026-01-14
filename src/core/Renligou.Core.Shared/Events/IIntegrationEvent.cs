@@ -2,6 +2,6 @@
 {
     public interface IIntegrationEvent
     {
-        DateTime OccurredAt();
+        DateTimeOffset OccurredAt { get; }
     }
 }

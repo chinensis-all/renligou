@@ -1,4 +1,5 @@
 using Renligou.Core.Application.Kernel.Commands;
+using Renligou.Core.Application.Kernel.Handlers;
 using Renligou.Core.Domain.EventingContext.Repo;
 using Renligou.Core.Shared.Events;
 
@@ -55,7 +56,7 @@ public class CreateOutboxHandlerTests
     private class TestIntegrationEvent : IIntegrationEvent
     {
         public Guid Id { get; } = Guid.NewGuid();
-        public DateTime OccurredAt() => DateTime.UtcNow;
+        public DateTimeOffset OccurredAt => DateTimeOffset.UtcNow;
     }
 
     private class MockOutboxRepository : IOutboxRepository

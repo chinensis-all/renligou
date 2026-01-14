@@ -27,13 +27,13 @@ namespace Renligou.Core.Infrastructure.Persistence.Pos
 
         public int RetryCount { get; set; } = 0;
 
-        public DateTime OccurredAt { get; set; }
+        public DateTimeOffset OccurredAt { get; set; }
 
-        public DateTime SentAt { get; set; }
+        public DateTimeOffset SentAt { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
 
         public long Version { get; set; } = 0;
     }

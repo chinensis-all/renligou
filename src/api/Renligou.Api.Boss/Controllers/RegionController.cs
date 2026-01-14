@@ -29,7 +29,6 @@ namespace Renligou.Api.Boss.Controllers
             [FromQuery] string? regionName
         )
         {
-         
             return await _regionFacade.GetRegionListAsync(parentId, regionName);
         }
     }

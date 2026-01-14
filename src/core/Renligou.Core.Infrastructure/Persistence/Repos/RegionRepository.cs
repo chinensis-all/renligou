@@ -33,5 +33,13 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
 
             return await Task.FromResult(regions);
         }
+
+        public async Task<Dictionary<long, string>> QueryRegionNamesByIdsAsync(IEnumerable<long> regionIds)
+        {
+            var regionNames = await _context.Set<RegionPo>()
+                .Where(r => regionIds.Contains(r.Id))
+                .ToDictionaryAsync(r => r.Id, r => r.RegionName);
+            return regionNames;
+        }
     }
 }

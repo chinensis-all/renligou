@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Renligou.Core.Domain.EventingContext.Repo;
 using Renligou.Core.Infrastructure.Persistence.Pos;
 using Renligou.Core.Shared.Events;
@@ -6,14 +7,11 @@ using System.Text.Json;
 
 namespace Renligou.Core.Infrastructure.Persistence.Repos
 {
-    public class OutboxRepository : IOutboxRepository
+    public class OutboxRepository(
+        DbContext _context,
+        ILogger<OutboxRepository> _logger
+    ) : IOutboxRepository
     {
-        private readonly DbContext _context;
-
-        public OutboxRepository(DbContext context)
-        {
-            _context = context;
-        }
 
         public async Task AddAsync(IIntegrationEvent @event, String category, String aggregateType, String aggregateId)
         {
@@ -22,11 +20,14 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
             po.SourceType = aggregateType;
             po.SourceId = aggregateId;
             po.EventType = @event.GetType().FullName ?? string.Empty;
-            po.Payload = JsonSerializer.Serialize(@event);
+            po.Payload = JsonSerializer.Serialize(@event, @event.GetType());
             po.Status = "NEW";
-            po.OccurredAt = (@event as IIntegrationEvent)?.OccurredAt() ?? default;
+            po.OccurredAt = (@event as IIntegrationEvent)?.OccurredAt ?? default;
+            po.CreatedAt = DateTimeOffset.UtcNow;
+            po.UpdatedAt = DateTimeOffset.UtcNow;
 
-            await _context.AddAsync(po);
+            _context.Set<OutboxPo>().Add(po);
+            _context.Entry(po).State = EntityState.Added;
         }
 
         public async Task AddAsync(IEnumerable<IIntegrationEvent> @events, String category, String aggregateType, String aggregateId)
