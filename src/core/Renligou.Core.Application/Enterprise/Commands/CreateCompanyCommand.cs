@@ -6,28 +6,29 @@ namespace Renligou.Core.Application.Enterprise.Commands
 {
     public sealed record CreateCompanyCommand : ICommand<Result>
     {
-        public string CompanyType { get; init; }
+        public string CompanyType { get; init; } = string.Empty;
 
-        public string CompanyCode { get; init; }
+        public string CompanyCode { get; init; } = string.Empty;
 
-        public string CompanyName { get; init; }
+        public string CompanyName { get; init; } = string.Empty;
 
-        public string CompanyShortName { get; init; }
+        public string CompanyShortName { get; init; } = string.Empty;
 
-        public string LegalPersonName { get; init; }
+        public string LegalPersonName { get; init; } = string.Empty;
 
-        public string CreditCode { get; init; }
+        public string CreditCode { get; init; } = string.Empty;
 
-        public string RegisteredAddress { get; init; }
+        public string RegisteredAddress { get; init; } = string.Empty;
 
-        public string Remark { get; init; }
+        public string Remark { get; init; } = string.Empty;
+
         public long ProvinceId { get; init; }
 
         public long CityId { get; init; }
 
         public long DistrictId { get; init; }
 
-        public string CompletedAddress { get; init; }
+        public string CompletedAddress { get; init; } = string.Empty;
 
         public bool Enabled { get; init; }
 
