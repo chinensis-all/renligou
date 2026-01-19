@@ -40,10 +40,13 @@ namespace Renligou.Core.Application.Tests.IdentityAccess
             {
                 GroupName = "Admin",
                 DisplayName = "管理员",
-                Description = "Desc"
+                Description = "Desc",
+                ParentId = 100,
+                Sorter = 99
             };
 
             _idGeneratorMock.Setup(x => x.NextId()).Returns(1);
+            _permissionGroupRepositoryMock.Setup(x => x.LoadAsync(100)).ReturnsAsync(new PermissionGroup(new AggregateId(100, false), "Parent", "Parent", "Desc", 0, 0));
             _permissionGroupRepositoryMock.Setup(x => x.IsGroupNameConflictAsync(1, "Admin")).ReturnsAsync(false);
             _permissionGroupRepositoryMock.Setup(x => x.IsDisplayNameConflictAsync(1, "管理员")).ReturnsAsync(false);
 
@@ -52,7 +55,11 @@ namespace Renligou.Core.Application.Tests.IdentityAccess
 
             // Assert
             Assert.That(result.Success, Is.True);
-            _permissionGroupRepositoryMock.Verify(x => x.SaveAsync(It.Is<PermissionGroup>(p => p.GroupName == "Admin" && p.Id.id == 1)), Times.Once);
+            _permissionGroupRepositoryMock.Verify(x => x.SaveAsync(It.Is<PermissionGroup>(p => 
+                p.GroupName == "Admin" && 
+                p.Id.id == 1 &&
+                p.ParentId == 100 &&
+                p.Sorter == 99)), Times.Once);
             _outboxRepositoryMock.Verify(x => x.AddAsync(It.IsAny<IReadOnlyList<IIntegrationEvent>>(), "DOMAIN", "PermissionGroup", "1"), Times.Once);
         }
 
@@ -76,7 +83,29 @@ namespace Renligou.Core.Application.Tests.IdentityAccess
             // Assert
             Assert.That(result.Success, Is.False);
             Assert.That(result.Error.Code, Is.EqualTo("PermissionGroup.Create.Error"));
+            Assert.That(result.Error.Message, Is.EqualTo("权限组名称已存在"));
             _permissionGroupRepositoryMock.Verify(x => x.SaveAsync(It.IsAny<PermissionGroup>()), Times.Never);
+        }
+
+        [Test]
+        public async Task HandleAsync_WhenParentNotFound_ShouldReturnFail()
+        {
+            // Arrange
+            var command = new CreatePermissionGroupCommand
+            {
+                GroupName = "Admin",
+                DisplayName = "管理员",
+                ParentId = 999
+            };
+
+            _permissionGroupRepositoryMock.Setup(x => x.LoadAsync(999)).ReturnsAsync((PermissionGroup)null);
+
+            // Act
+            var result = await _handler.HandleAsync(command, CancellationToken.None);
+
+            // Assert
+            Assert.That(result.Success, Is.False);
+            Assert.That(result.Error.Message, Is.EqualTo("父权限组不存在"));
         }
     }
 }

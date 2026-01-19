@@ -659,6 +659,12 @@ public class CompanyRepository(DbContext _db) : ICompanyRepository, ICompanyQuer
 }
 ```
 
+### 4.3 DbContext配置
+- 在`src\core\Renligou.Core.Infrastructure\Persistence\EFCore\MysqlDbContext.cs`文件中添加DbSet:
+```csharp
+public DbSet<CompanyPo> Companies { get; set; } = null!;
+```
+
 # 5 测试
 
 测试是保障CQRS模式实现正确性的关键环节。本Skill推荐采用三层测试策略：领域单元测试、应用层单元测试和集成测试。
@@ -789,4 +795,11 @@ public class CompanyControllerIntegrationTests
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
     }
 }
+```
+
+## 6 补充规则
+- 应用层DTO的属性应用[Description]特性进行描述，便于生成文档。
+```csharp
+ [Description("公司ID")]
+ public string CompanyId { get; init; }
 ```

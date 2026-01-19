@@ -52,7 +52,9 @@ namespace Renligou.Api.Boss.Tests
             {
                 GroupName = "Admin",
                 DisplayName = "管理员",
-                Description = "Desc"
+                Description = "Desc",
+                ParentId = 100,
+                Sorter = 99
             };
 
             _mockCommandBus.SendAsync<CreatePermissionGroupCommand, Result>(Arg.Any<CreatePermissionGroupCommand>(), Arg.Any<CancellationToken>())
@@ -63,7 +65,7 @@ namespace Renligou.Api.Boss.Tests
 
             // Assert
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-            await _mockCommandBus.Received(1).SendAsync<CreatePermissionGroupCommand, Result>(Arg.Any<CreatePermissionGroupCommand>(), Arg.Any<CancellationToken>());
+            await _mockCommandBus.Received(1).SendAsync<CreatePermissionGroupCommand, Result>(Arg.Is<CreatePermissionGroupCommand>(c => c.ParentId == 100 && c.Sorter == 99), Arg.Any<CancellationToken>());
         }
 
         [Test]
@@ -71,7 +73,7 @@ namespace Renligou.Api.Boss.Tests
         {
             // Arrange
             long id = 123;
-            var dto = new PermissionGroupDetailDto { Id = "123", GroupName = "Admin", DisplayName = "管理员" };
+            var dto = new PermissionGroupDetailDto { Id = "123", GroupName = "Admin", DisplayName = "管理员", ParentId = "100" };
 
             _mockQueryBus.QueryAsync<GetPermissionGroupDetailQuery, Result<PermissionGroupDetailDto?>>(Arg.Any<GetPermissionGroupDetailQuery>(), Arg.Any<CancellationToken>())
                 .Returns(Result<PermissionGroupDetailDto?>.Ok(dto));
@@ -84,6 +86,23 @@ namespace Renligou.Api.Boss.Tests
             var result = await response.Content.ReadFromJsonAsync<PermissionGroupDetailDto>();
             Assert.That(result, Is.Not.Null);
             Assert.That(result!.Id, Is.EqualTo("123"));
+            Assert.That(result.ParentId, Is.EqualTo("100"));
+        }
+
+        [Test]
+        public async Task Destroy_ShouldReturnOk_WhenCommandSucceeds()
+        {
+            // Arrange
+            long id = 123;
+            _mockCommandBus.SendAsync<DestroyPermissionGroupCommand, Result>(Arg.Any<DestroyPermissionGroupCommand>(), Arg.Any<CancellationToken>())
+                .Returns(Result.Ok());
+
+            // Act
+            var response = await _client.DeleteAsync($"/permission-groups/{id}");
+
+            // Assert
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+            await _mockCommandBus.Received(1).SendAsync<DestroyPermissionGroupCommand, Result>(Arg.Is<DestroyPermissionGroupCommand>(c => c.Id == id), Arg.Any<CancellationToken>());
         }
 
         [OneTimeTearDown]

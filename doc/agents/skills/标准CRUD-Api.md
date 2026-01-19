@@ -388,3 +388,21 @@ public class [控制器名]ControllerIntegrationTests
 }
 ```
 
+## 5 补充规则
+- 控制器方法应尽量保持简洁，复杂逻辑应放在 CommandHandler 或 QueryHandler 中处理。
+- 所有输入参数应进行必要的验证（可使用数据注解或 FluentValidation）。
+- 日志记录应覆盖关键操作和异常情况，便于排查问题。
+- 确保所有异步方法使用 `async/await` 模式，避免阻塞调用。
+- Request对应的属性应用[Description] 特性进行描述，便于生成 API 文档。
+  ```csharp
+  [Description("公司类型(HEADQUARTER / BRANCH / SUBSIDIARY)")]
+  [Required(ErrorMessage = "公司类型不能为空")]
+  public string CompanyType { get; init; } = default!;
+  ```
+- 如果数据库表中字段设置为not null, 则对应的 Request 属性应应用[Required] 特性进行标记，确保请求数据完整性。
+- 如果数据库表中字段允许为 null, 则对应的 Request 属性应设置为可空类型（如 string?、int? 等），以避免不必要的验证错误。
+- 如果数据库表中字段char 或 varchar 类型，且有长度限制, 则对应的 Request 属性应应用[MaxLength] 特性进行标记，确保请求数据符合长度要求。
+  ```csharp
+  [MaxLength(50, ErrorMessage = "公司名称不能超过50个字符")]
+  public string CompanyName { get; init; } = default!;
+  ```

@@ -17,6 +17,11 @@ namespace Renligou.Core.Infrastructure.Persistence.Pos
 
         public string Description { get; set; } = string.Empty;
 
+        [Column("parent_id")]
+        public long ParentId { get; set; }
+
+        public int Sorter { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }

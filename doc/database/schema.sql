@@ -97,9 +97,11 @@ DROP TABLE IF EXISTS `permission_groups`;
 CREATE TABLE IF NOT EXISTS `permission_groups`
 (
     `id`           BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT 'ID',
+    `parent_id`    BIGINT       NOT NULL DEFAULT 0 COMMENT '父权限组ID',
     `group_name`   VARCHAR(100) NOT NULL COMMENT '权限组名称',
     `display_name` VARCHAR(100) NOT NULL COMMENT '权限组显示名称',
     `description`  VARCHAR(255) NOT NULL DEFAULT '' COMMENT '权限组描述',
+    `sorter`       INT          NOT NULL DEFAULT 0 COMMENT '排序值，值越小越靠前',
     `created_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `deleted_at`   BIGINT       NOT NULL DEFAULT 0 COMMENT '软删除标记 0=未删除, 非0=已删除',

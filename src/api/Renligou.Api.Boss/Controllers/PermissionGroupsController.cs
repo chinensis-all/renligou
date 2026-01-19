@@ -31,7 +31,9 @@ namespace Renligou.Api.Boss.Controllers
             {
                 GroupName = request.GroupName,
                 DisplayName = request.DisplayName,
-                Description = request.Description
+                Description = request.Description,
+                ParentId = request.ParentId,
+                Sorter = request.Sorter
             };
 
             var res = await _uow.ExecuteAsync<Result>(async () =>
@@ -60,7 +62,9 @@ namespace Renligou.Api.Boss.Controllers
                 Id = id,
                 GroupName = request.GroupName,
                 DisplayName = request.DisplayName,
-                Description = request.Description
+                Description = request.Description,
+                ParentId = request.ParentId,
+                Sorter = request.Sorter
             };
 
             var res = await _uow.ExecuteAsync<Result>(async () =>
@@ -80,16 +84,16 @@ namespace Renligou.Api.Boss.Controllers
         /// 删除权限组
         /// </summary>
         [HttpDelete("{id:long}")]
-        public async Task<IActionResult> Delete(
+        public async Task<IActionResult> Destroy(
             [FromRoute] long id,
             CancellationToken cancellationToken = default
         )
         {
-            var command = new DeletePermissionGroupCommand(id);
+            var command = new DestroyPermissionGroupCommand(id);
 
             var res = await _uow.ExecuteAsync<Result>(async () =>
             {
-                return await _commandBus.SendAsync<DeletePermissionGroupCommand, Result>(command, cancellationToken);
+                return await _commandBus.SendAsync<DestroyPermissionGroupCommand, Result>(command, cancellationToken);
             }, true);
 
             if (!res.Success)

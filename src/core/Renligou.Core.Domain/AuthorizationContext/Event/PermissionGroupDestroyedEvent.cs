@@ -2,7 +2,7 @@ using Renligou.Core.Shared.Events;
 
 namespace Renligou.Core.Domain.AuthorizationContext.Event
 {
-    public sealed record PermissionGroupDeletedEvent : IIntegrationEvent
+    public sealed record PermissionGroupDestroyedEvent : IIntegrationEvent
     {
         public DateTimeOffset OccurredAt { get; init; }
 

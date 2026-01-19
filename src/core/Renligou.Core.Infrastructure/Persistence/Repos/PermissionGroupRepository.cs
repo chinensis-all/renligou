@@ -78,6 +78,8 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
                     GroupName = x.GroupName,
                     DisplayName = x.DisplayName,
                     Description = x.Description,
+                    ParentId = x.ParentId.ToString(),
+                    Sorter = x.Sorter,
                     CreatedAt = x.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
                     UpdatedAt = x.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")
                 })
@@ -87,11 +89,14 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
         public Task<List<PermissionGroupListDto>> SearchAsync(PermissionGroupSearchCriteria criteria, CancellationToken cancellationToken = default)
         {
             return GetSearchQuery(criteria)
+                .OrderBy(x => x.Sorter)
                 .Select(x => new PermissionGroupListDto
                 {
                     Id = x.Id.ToString(),
                     GroupName = x.GroupName,
-                    DisplayName = x.DisplayName
+                    DisplayName = x.DisplayName,
+                    ParentId = x.ParentId.ToString(),
+                    Sorter = x.Sorter
                 })
                 .ToListAsync(cancellationToken);
         }
@@ -122,6 +127,8 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
                     GroupName = x.GroupName,
                     DisplayName = x.DisplayName,
                     Description = x.Description,
+                    ParentId = x.ParentId.ToString(),
+                    Sorter = x.Sorter,
                     CreatedAt = x.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss"),
                     UpdatedAt = x.UpdatedAt.ToString("yyyy-MM-dd HH:mm:ss")
                 })
@@ -163,6 +170,8 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
                 po.GroupName,
                 po.DisplayName,
                 po.Description,
+                po.ParentId,
+                po.Sorter,
                 po.DeletedAt
             );
         }
@@ -173,6 +182,8 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
             po.GroupName = aggregate.GroupName;
             po.DisplayName = aggregate.DisplayName;
             po.Description = aggregate.Description;
+            po.ParentId = aggregate.ParentId;
+            po.Sorter = aggregate.Sorter;
             po.DeletedAt = aggregate.DeletedAt;
 
             if (aggregate.Id.isNew)

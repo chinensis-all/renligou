@@ -13,5 +13,9 @@ namespace Renligou.Core.Domain.AuthorizationContext.Event
         public string DisplayName { get; init; } = string.Empty;
 
         public string Description { get; init; } = string.Empty;
+
+        public long ParentId { get; init; }
+
+        public int Sorter { get; init; }
     }
 }

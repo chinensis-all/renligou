@@ -22,6 +22,16 @@ namespace Renligou.Core.Application.IdentityAccess.Handlers
                 return validation;
             }
 
+            // 验证父权限组是否存在
+            if (command.ParentId > 0)
+            {
+                var parentGroup = await _permissionGroupRepository.LoadAsync(command.ParentId);
+                if (parentGroup == null || parentGroup.DeletedAt > 0)
+                {
+                    return Result.Fail("PermissionGroup.Create.Error", "父权限组不存在");
+                }
+            }
+
             long id = _idGenerator.NextId();
 
             if (await _permissionGroupRepository.IsGroupNameConflictAsync(id, command.GroupName))
@@ -38,7 +48,9 @@ namespace Renligou.Core.Application.IdentityAccess.Handlers
                 new AggregateId(id, true),
                 command.GroupName,
                 command.DisplayName,
-                command.Description
+                command.Description,
+                command.ParentId,
+                command.Sorter
             );
 
             permissionGroup.Create();

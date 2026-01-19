@@ -13,6 +13,10 @@ namespace Renligou.Core.Application.IdentityAccess.Commands
 
         public string Description { get; init; } = string.Empty;
 
+        public long ParentId { get; init; }
+
+        public int Sorter { get; init; }
+
         public Result Validate()
         {
              if (string.IsNullOrWhiteSpace(GroupName))

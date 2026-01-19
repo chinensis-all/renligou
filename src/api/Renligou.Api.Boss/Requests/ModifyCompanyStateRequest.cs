@@ -5,7 +5,7 @@ namespace Renligou.Api.Boss.Requests
 {
     public sealed record ModifyCompanyStateRequest 
     {
-        [Description]
+        [Description("是否启用")]
         [Required(ErrorMessage = "请选择是否启用")]
         public bool Enabled { get; init; }
 

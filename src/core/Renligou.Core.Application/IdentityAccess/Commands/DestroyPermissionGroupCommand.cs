@@ -3,5 +3,5 @@ using Renligou.Core.Shared.Ddd;
 
 namespace Renligou.Core.Application.IdentityAccess.Commands
 {
-    public sealed record DeletePermissionGroupCommand(long Id) : ICommand<Result>;
+    public sealed record DestroyPermissionGroupCommand(long Id) : ICommand<Result>;
 }

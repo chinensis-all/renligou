@@ -11,6 +11,10 @@ namespace Renligou.Core.Domain.AuthorizationContext.Model
 
         public string Description { get; private set; }
 
+        public long ParentId { get; private set; }
+
+        public int Sorter { get; private set; }
+
         public long DeletedAt { get; private set; }
 
         public PermissionGroup(
@@ -18,12 +22,16 @@ namespace Renligou.Core.Domain.AuthorizationContext.Model
             string groupName,
             string displayName,
             string description,
+            long parentId,
+            int sorter,
             long deletedAt = 0)
         {
             Id = id;
             GroupName = groupName;
             DisplayName = displayName;
             Description = description;
+            ParentId = parentId;
+            Sorter = sorter;
             DeletedAt = deletedAt;
         }
 
@@ -35,16 +43,20 @@ namespace Renligou.Core.Domain.AuthorizationContext.Model
                 Id = Id.id,
                 GroupName = GroupName,
                 DisplayName = DisplayName,
-                Description = Description
+                Description = Description,
+                ParentId = ParentId,
+                Sorter = Sorter
             };
             RegisterEvent(@event);
         }
 
-        public void Modify(string groupName, string displayName, string description)
+        public void Modify(string groupName, string displayName, string description, long parentId, int sorter)
         {
             GroupName = groupName;
             DisplayName = displayName;
             Description = description;
+            ParentId = parentId;
+            Sorter = sorter;
 
             var @event = new PermissionGroupModifiedEvent
             {
@@ -52,16 +64,18 @@ namespace Renligou.Core.Domain.AuthorizationContext.Model
                 Id = Id.id,
                 GroupName = GroupName,
                 DisplayName = DisplayName,
-                Description = Description
+                Description = Description,
+                ParentId = ParentId,
+                Sorter = Sorter
             };
             RegisterEvent(@event);
         }
 
-        public void Delete()
+        public void Destroy()
         {
             DeletedAt = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
-            var @event = new PermissionGroupDeletedEvent
+            var @event = new PermissionGroupDestroyedEvent
             {
                 OccurredAt = DateTimeOffset.UtcNow,
                 Id = Id.id
