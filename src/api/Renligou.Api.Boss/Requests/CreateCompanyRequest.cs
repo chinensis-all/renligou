@@ -58,7 +58,7 @@ namespace Renligou.Api.Boss.Requests
         [MaxLength(256, ErrorMessage = "详细地址长度不能超过 256")]
         public string CompletedAddress { get; init; } = default!;
 
-        [Description]
+        [Description("是否启用")]
         public bool Enabled { get; init; } = false;
 
         [Description("生效日期，格式：yyyy-MM-dd")]

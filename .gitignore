@@ -20,6 +20,8 @@ bld/
 *.rsuser
 *.suo
 *.user
+!src/api/Renligou.Api.User/
+!src/interface/Renligou.Interface.User/
 *.userosscache
 *.sln.docstates
 

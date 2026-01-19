@@ -1,8 +1,13 @@
-﻿namespace Renligou.Core.Application.Enterprise.Queries
+﻿using System.ComponentModel;
+
+namespace Renligou.Core.Application.Enterprise.Queries
 {
     public sealed record CompanyDetailDto
     {
+        [Description("公司ID")]
         public string CompanyId { get; init; }
+
+        public string CompanyCode { get; init; }
 
         public string CompanyType { get; init; }
 

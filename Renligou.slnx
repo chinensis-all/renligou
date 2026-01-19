@@ -1,9 +1,12 @@
 <Solution>
   <Folder Name="/doc/" />
-  <Folder Name="/doc/agents/" />
-  <Folder Name="/doc/agents/skills/">
+  <Folder Name="/doc/agents/">
     <File Path="doc/agents/CommandBus&amp;QueryBus.md" />
-    <File Path="doc/agents/skills/SingleTableCqrs.md" />
+    <File Path="doc/agents/权限组Logic&amp;Boss Api.md" />
+  </Folder>
+  <Folder Name="/doc/agents/skills/">
+    <File Path="doc/agents/skills/单表CQRS.md" />
+    <File Path="doc/agents/skills/标准CRUD-Api.md" />
   </Folder>
   <Folder Name="/doc/database/">
     <File Path="doc/database/schema.sql" />
