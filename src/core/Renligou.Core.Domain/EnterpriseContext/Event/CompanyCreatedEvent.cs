@@ -11,22 +11,22 @@ namespace Renligou.Core.Domain.EnterpriseContext.Event
 
         public CompanyType CompanyType { get; init; }
 
-        public string CompanyCode { get; init; }
+        public string CompanyCode { get; init; } = string.Empty;
 
-        public string CompanyName { get; init; }
+        public string CompanyName { get; init; } = string.Empty;
 
-        public string CompanyShortName { get; init; }
+        public string CompanyShortName { get; init; } = string.Empty;
 
-        public string LegalPersonName { get; init; }
+        public string LegalPersonName { get; init; } = string.Empty;
 
-        public string CreditCode { get; init; }
+        public string CreditCode { get; init; } = string.Empty;
 
-        public string RegisteredAddress { get; init; }
+        public string RegisteredAddress { get; init; } = string.Empty;
 
-        public string Remark { get; init; }
+        public string Remark { get; init; } = string.Empty;
 
-        public Address Address { get; init; }
+        public Address Address { get; init; } = default!;
 
-        public CompanyState State { get; init; }
+        public CompanyState State { get; init; } = default!;
     } 
 }
