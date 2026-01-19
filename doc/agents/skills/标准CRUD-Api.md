@@ -273,3 +273,118 @@ public async Task<IActionResult> Delete(
     return Ok();
 }
 ```
+
+## 4 测试
+
+推荐为 CRUD 控制器编写 **集成测试 (Integration Tests)**，以验证完整的请求链路。
+
+测试项目位置通常为 `tests/Renligou.Api.[项目名].Tests/`。
+
+### 关键工具
+- `CustomWebApplicationFactory<Program>`: 用于启动内存中的测试服务器。
+- `HttpClient`: 用于发送模拟请求 (`PostAsJsonAsync`, `GetAsync` 等)。
+- `NSubstitute`: 用于 Mock 下层依赖（如 CommandBus, QueryBus, UoW），以便隔离控制器层的逻辑测试。
+
+### 测试用例示例
+
+以下示例展示了如何对控制器的 Create 和 GetDetail 端点进行集成测试。
+
+```csharp
+[TestFixture]
+public class [控制器名]ControllerIntegrationTests
+{
+    private CustomWebApplicationFactory<Program> _factory;
+    private HttpClient _client;
+    // Mock 对象
+    private ICommandBus _mockCommandBus;
+    private IQueryBus _mockQueryBus;
+    private IUnitOfWork _mockUow;
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
+    {
+        // 1. 初始化 Mock
+        _mockCommandBus = Substitute.For<ICommandBus>();
+        _mockQueryBus = Substitute.For<IQueryBus>();
+        _mockUow = Substitute.For<IUnitOfWork>();
+
+        // 2. 配置 WebApplicationFactory
+        _factory = new CustomWebApplicationFactory<Program>();
+        _client = _factory.WithWebHostBuilder(builder =>
+        {
+            builder.ConfigureServices(services =>
+            {
+                // 替换服务为 Mock 对象
+                services.AddScoped(_ => _mockCommandBus);
+                services.AddScoped(_ => _mockQueryBus);
+                services.AddScoped(_ => _mockUow);
+                
+                // 让 Mock UoW 真正执行 Action
+                _mockUow.ExecuteAsync<Result>(Arg.Any<Func<Task<Result>>>(), Arg.Any<bool>())
+                    .Returns(x => ((Func<Task<Result>>)x[0])());
+                
+                // 如有泛型重载，也需配置
+                _mockUow.ExecuteAsync<Result<[Dto类型]?>>(Arg.Any<Func<Task<Result<[Dto类型]?>>>>(), Arg.Any<bool>())
+                   .Returns(x => ((Func<Task<Result<[Dto类型]?>>>)x[0])());
+            });
+        }).CreateClient();
+    }
+
+    [Test]
+    public async Task Create_ShouldReturnOk_WhenCommandSucceeds()
+    {
+        // Arrange
+        var request = new Create[资源名]Request
+        {
+             // ... 初始化请求数据
+        };
+        
+        // 模拟 CommandBus 返回成功
+        _mockCommandBus.SendAsync<Create[资源名]Command, Result>(
+            Arg.Any<Create[资源名]Command>(), 
+            Arg.Any<CancellationToken>()
+        ).Returns(Result.Ok());
+
+        // Act
+        var response = await _client.PostAsJsonAsync("/[路由前缀]", request);
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        // 验证 CommandBus 被调用
+        await _mockCommandBus.Received(1).SendAsync<Create[资源名]Command, Result>(
+            Arg.Any<Create[资源名]Command>(), 
+            Arg.Any<CancellationToken>()
+        );
+    }
+
+    [Test]
+    public async Task GetDetail_ShouldReturnData_WhenQuerySucceeds()
+    {
+        // Arrange
+        long id = 123;
+        var dto = new [资源名]DetailDto { /* ... */ };
+        
+        // 模拟 QueryBus 返回数据
+        _mockQueryBus.QueryAsync<Get[资源名]DetailQuery, Result<[资源名]DetailDto?>>(
+            Arg.Any<Get[资源名]DetailQuery>(), 
+            Arg.Any<CancellationToken>()
+        ).Returns(Result<[资源名]DetailDto?>.Ok(dto));
+
+        // Act
+        var response = await _client.GetAsync($"/[路由前缀]/{id}");
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+        var result = await response.Content.ReadFromJsonAsync<[资源名]DetailDto>();
+        Assert.That(result, Is.Not.Null);
+    }
+
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        _client.Dispose();
+        _factory.Dispose();
+    }
+}
+```
+

@@ -658,3 +658,135 @@ public class CompanyRepository(DbContext _db) : ICompanyRepository, ICompanyQuer
     // ... Implement SearchAsync, PaginateAsync similarly using LINQ Select ...
 }
 ```
+
+# 5 测试
+
+测试是保障CQRS模式实现正确性的关键环节。本Skill推荐采用三层测试策略：领域单元测试、应用层单元测试和集成测试。
+
+使用框架：`NUnit`, `Moq` (或手动Mock类), `WebApplicationFactory` (集成测试)。
+
+### 5.1 领域层测试 (Domain Tests)
+
+针对聚合根（Aggregate Root）进行纯单元测试，验证业务逻辑和领域事件的生成。
+
+- **位置** : `tests/Renligou.Core.Domain.Tests/[上下文名]/`
+- **主要验证点** :
+  1. 聚合根状态变更是否正确。
+  2. 是否注册了正确的领域事件 (`GetRegisteredEvents()`)。
+  3. 领域事件内容是否与操作一致。
+
+**示例代码** (`CompanyTests.cs`):
+
+```csharp
+[TestFixture]
+public class CompanyTests
+{
+    [Test]
+    public void Create_ShouldRegisterCompanyCreatedEvent()
+    {
+        // 1. Arrange & Act
+        var company = new Company(...); // 构造聚合根
+        company.Create();               // 执行行为
+
+        // 2. Assert
+        var events = company.GetRegisteredEvents();
+        Assert.That(events, Has.Count.EqualTo(1));
+        Assert.That(events[0], Is.TypeOf<CompanyCreatedEvent>());
+        
+        var @event = (CompanyCreatedEvent)events[0];
+        Assert.That(@event.CompanyName, Is.EqualTo("Test Company"));
+    }
+}
+```
+
+### 5.2 应用层测试 (Application Handler Tests)
+
+针对命令处理器（Command Handler）进行测试，Mock所有外部依赖（仓储、服务等），验证流程控制。
+
+- **位置** : `tests/Renligou.Core.Application.Tests/[领域名]/`
+- **Mocks** : 推荐使用手动Mock类（如 `MockCompanyRepository`）或 Moq 框架来模拟仓储行为。
+- **主要验证点** :
+  1. 验证器 (`Validate`) 是否被调用且生效。
+  2. 仓储 (`Repository`) 是否被调用（`SaveAsync` 是否执行，参数是否正确）。
+  3. Outbox (`OutboxRepository`) 是否接收到了事件。
+  4. 业务规则检查（如名称重复）是否按预期工作。
+
+**示例代码** (`CreateCompanyHandlerTests.cs`):
+
+```csharp
+[TestFixture]
+public class CreateCompanyHandlerTests
+{
+    // 定义Mock成员变量
+    private MockCompanyRepository _companyRepository;
+    private MockOutboxRepository _outboxRepository;
+    private CreateCompanyHandler _handler;
+
+    [SetUp]
+    public void SetUp()
+    {
+        // 初始化Mock和Handler
+        _companyRepository = new MockCompanyRepository();
+        _outboxRepository = new MockOutboxRepository();
+        _handler = new CreateCompanyHandler(_companyRepository, ..., _outboxRepository, ...);
+    }
+
+    [Test]
+    public async Task HandleAsync_WhenValidCommand_ShouldSaveCompanyAndOutbox()
+    {
+        // Arrange
+        var command = new CreateCompanyCommand { ... };
+
+        // Act
+        var result = await _handler.HandleAsync(command, CancellationToken.None);
+
+        // Assert
+        Assert.That(result.Success, Is.True);
+        
+        // 验证仓储保存
+        Assert.That(_companyRepository.SavedAggregate, Is.Not.Null);
+        Assert.That(_companyRepository.SavedAggregate.CompanyName, Is.EqualTo(command.CompanyName));
+        
+        // 验证Outbox事件
+        Assert.That(_outboxRepository.AddedEvents, Has.Count.GreaterThan(0));
+    }
+}
+```
+
+### 5.3 集成测试 (Connect All Layers)
+
+通常位于 API 测试项目中，验证控制器、Total Pipeline、数据库/EF Core 映射（使用内存库或测试库）的集成情况。
+
+- **位置** : `tests/Renligou.Api.Boss.Tests/` (对应API项目)
+- **工具** : `WebApplicationFactory`, `HttpClient`, `NSubstitute` (用于Mock部分基础设施如ServiceBus)
+- **主要验证点** :
+  1. API 端点 (`/companies`) 是否可访问。
+  2. 请求参数绑定是否正确。
+  3. HTTP 状态码返回值。
+  4. 端到端流程是否通畅。
+
+**示例代码** (`CompanyControllerTests.cs`):
+
+```csharp
+[TestFixture]
+public class CompanyControllerIntegrationTests
+{
+    private CustomWebApplicationFactory<Program> _factory;
+    private HttpClient _client;
+
+    [OneTimeSetUp]
+    public void OneTimeSetUp()
+    {
+        _factory = new CustomWebApplicationFactory<Program>();
+        _client = _factory.CreateClient();
+    }
+
+    [Test]
+    public async Task Create_ShouldReturnOk()
+    {
+        var command = new CreateCompanyRequest { ... };
+        var response = await _client.PostAsJsonAsync("/companies", command);
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
+    }
+}
+```
