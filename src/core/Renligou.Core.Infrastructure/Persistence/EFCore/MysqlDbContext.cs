@@ -9,10 +9,9 @@ namespace Renligou.Core.Infrastructure.Persistence.EFCore
         {
         }
 
-        public DbSet<RegionPo> regions { get; set; }                                       // 中国行政区划表
-
-        public DbSet<OutboxPo> outboxes { get; set; }                                      // 可靠事件表
-
-        public DbSet<CompanyPo> companies { get; set; }                                    // 企业信息表
+        public DbSet<RegionPo> Regions { get; set; } = null!;                                       // 中国行政区划表
+        public DbSet<OutboxPo> Outboxes { get; set; } = null!;                                      // 可靠事件表
+        public DbSet<CompanyPo> Companies { get; set; } = null!;                                    // 企业信息表
+        public DbSet<PermissionGroupPo> PermissionGroups { get; set; } = null!;                     // 权限组表
     }
 }
