@@ -1,11 +1,13 @@
 <Solution>
   <Folder Name="/doc/" />
   <Folder Name="/doc/agents/">
-    <File Path="doc/agents/CommandBus&amp;QueryBus.md" />
-    <File Path="doc/agents/权限组Logic&amp;Boss Api.md" />
+    <File Path="doc/agents/1-CommandBus&amp;QueryBus.md" />
+    <File Path="doc/agents/2-权限组Logic&amp;Boss Api.md" />
+    <File Path="doc/agents/3-权限组树形结构查询.md" />
   </Folder>
   <Folder Name="/doc/agents/skills/">
     <File Path="doc/agents/skills/单表CQRS.md" />
+    <File Path="doc/agents/skills/单表树查询处理器.md" />
     <File Path="doc/agents/skills/标准CRUD-Api.md" />
   </Folder>
   <Folder Name="/doc/database/">
