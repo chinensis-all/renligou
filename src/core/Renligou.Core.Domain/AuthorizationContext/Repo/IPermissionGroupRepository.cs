@@ -10,5 +10,10 @@ namespace Renligou.Core.Domain.AuthorizationContext.Repo
         Task<bool> IsGroupNameConflictAsync(long id, string groupName);
 
         Task<bool> IsDisplayNameConflictAsync(long id, string displayName);
+
+        /// <summary>
+        /// 检查权限组是否存在
+        /// </summary>
+        Task<bool> ExistsAsync(long groupId, CancellationToken cancellationToken);
     }
 }
