@@ -16,7 +16,7 @@ public class CompanyTests
         
         return new Company(
             new AggregateId(id, true),
-            CompanyType.HEADQUARTERS,
+            CompanyType.HEADQUARTER,
             "C001",
             "Test Company",
             "TC",

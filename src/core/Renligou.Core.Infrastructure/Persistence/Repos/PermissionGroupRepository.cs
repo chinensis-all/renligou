@@ -58,6 +58,12 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
             }
         }
 
+        public async Task<bool> ExistsAsync(long groupId, CancellationToken cancellationToken)
+        {
+            return await _db.Set<PermissionGroupPo>()
+                .AnyAsync(x => x.Id == groupId && x.DeletedAt == 0, cancellationToken);
+        }
+
         public async Task<bool> IsGroupNameConflictAsync(long id, string groupName)
         {
             return await _db.Set<PermissionGroupPo>()
