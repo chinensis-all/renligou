@@ -2,7 +2,7 @@ using System.ComponentModel;
 
 namespace Renligou.Core.Application.IdentityAccess.Queries
 {
-    public class PermissionGroupDetailDto
+    public sealed record PermissionGroupDetailDto
     {
         [Description("权限组ID")]
         public string Id { get; set; } = string.Empty;
