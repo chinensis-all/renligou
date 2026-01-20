@@ -13,5 +13,6 @@ namespace Renligou.Core.Infrastructure.Persistence.EFCore
         public DbSet<OutboxPo> Outboxes { get; set; } = null!;                                      // 可靠事件表
         public DbSet<CompanyPo> Companies { get; set; } = null!;                                    // 企业信息表
         public DbSet<PermissionGroupPo> PermissionGroups { get; set; } = null!;                     // 权限组表
+        public DbSet<RolePo> Roles { get; set; } = null!;                                           // 角色表
     }
 }
