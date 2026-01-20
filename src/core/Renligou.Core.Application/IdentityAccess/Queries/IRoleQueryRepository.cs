@@ -1,5 +1,6 @@
+using Renligou.Core.Application.Common.Queries;
+using Renligou.Core.Shared.Common;
 using Renligou.Core.Shared.Ddd;
-using Renligou.Core.Shared.Repo;
 
 namespace Renligou.Core.Application.IdentityAccess.Queries;
 

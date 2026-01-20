@@ -1,10 +1,9 @@
 ﻿namespace Renligou.Core.Shared.Exceptions
 {
-    public class DomainException : BusinessException
+    public abstract class DomainException : BusinessException
     {
-        protected DomainException(string message, string? errorCode = null)
-        : base(message, errorCode)
-        {
-        }
+        protected DomainException(string message) : base(message) { }
+
+        public abstract string ErrorCode { get; } 
     }
 }

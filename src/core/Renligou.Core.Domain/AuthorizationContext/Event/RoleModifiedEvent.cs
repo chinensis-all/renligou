@@ -14,4 +14,6 @@ public sealed record RoleModifiedEvent : IIntegrationEvent
     public string RoleName { get; init; } = string.Empty;
 
     public string DisplayName { get; init; } = string.Empty;
+
+    public string Description { get; init; }
 }
