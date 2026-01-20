@@ -14,5 +14,6 @@ namespace Renligou.Core.Infrastructure.Persistence.EFCore
         public DbSet<CompanyPo> Companies { get; set; } = null!;                                    // 企业信息表
         public DbSet<PermissionGroupPo> PermissionGroups { get; set; } = null!;                     // 权限组表
         public DbSet<PermissionPo> Permissions { get; set; } = null!;                               // 权限表
+        public DbSet<RolePo> Roles { get; set; } = null!;                                           // 角色表
     }
 }

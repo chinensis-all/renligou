@@ -128,3 +128,20 @@ CREATE TABLE IF NOT EXISTS `permissions`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='权限表';
+
+-- 角色
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles`
+(
+    `id`           BIGINT PRIMARY KEY COMMENT '角色ID',
+    `role_name`    VARCHAR(100) NOT NULL COMMENT '角色名称',
+    `display_name` VARCHAR(100) NOT NULL COMMENT '角色权限字符串',
+    `description`  VARCHAR(255) NOT NULL DEFAULT '' COMMENT '角色描述',
+    `created_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at`   BIGINT       NOT NULL DEFAULT 0 COMMENT '删除时间(逻辑删除)',
+    UNIQUE INDEX `uk_role_name` (`role_name`) USING BTREE,
+    UNIQUE INDEX `uk_display_name` (`display_name`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT ='角色表';
