@@ -5,7 +5,7 @@ using Renligou.Core.Application.IdentityAccess.Queries;
 using Renligou.Core.Shared.Bus;
 using Renligou.Core.Shared.Ddd;
 using Renligou.Core.Shared.EFCore;
-using Renligou.Core.Shared.Repo;
+using Renligou.Core.Application.Common.Queries;
 
 namespace Renligou.Api.Boss.Controllers;
 
@@ -17,8 +17,7 @@ namespace Renligou.Api.Boss.Controllers;
 public class RoleController(
     ICommandBus _commandBus,
     IQueryBus _queryBus,
-    IUnitOfWork _uow,
-    ILogger<RoleController> _logger
+    IUnitOfWork _uow
 ) : Controller
 {
     /// <summary>
@@ -32,7 +31,8 @@ public class RoleController(
         var command = new CreateRoleCommand
         {
             RoleName = request.RoleName,
-            DisplayName = request.DisplayName
+            DisplayName = request.DisplayName,
+            Description = request.Description
         };
 
         var res = await _uow.ExecuteAsync<Result>(async () =>
@@ -62,7 +62,8 @@ public class RoleController(
         {
             RoleId = id,
             RoleName = request.RoleName,
-            DisplayName = request.DisplayName
+            DisplayName = request.DisplayName,
+            Description = request.Description
         };
 
         var res = await _uow.ExecuteAsync<Result>(async () =>
@@ -89,6 +90,29 @@ public class RoleController(
     {
         var query = new GetRoleDetailQuery(id);
         var res = await _queryBus.QueryAsync<GetRoleDetailQuery, Result<RoleDetailDto?>>(query, cancellationToken);
+
+        if (!res.Success)
+            return BadRequest(res.Error);
+
+        return Ok(res.Value);
+    }
+
+    /// <summary>
+    /// 获取角色列表
+    /// </summary>
+    [HttpGet]
+    [ProducesResponseType(typeof(List<RoleListDto>), 200)]
+    [ProducesResponseType(typeof(string), 400)]
+    public async Task<IActionResult> GetList(
+        [FromQuery] GetRoleListRequest request,
+        CancellationToken cancellationToken = default
+    )
+    {
+        var query = new GetRoleListQuery(
+            request.RoleName ?? request.DisplayName
+        );
+
+        var res = await _queryBus.QueryAsync<GetRoleListQuery, Result<List<RoleListDto>>>(query, cancellationToken);
 
         if (!res.Success)
             return BadRequest(res.Error);

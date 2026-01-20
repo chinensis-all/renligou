@@ -1,8 +1,8 @@
 using Renligou.Core.Application.IdentityAccess.Commands;
 using Renligou.Core.Domain.AuthorizationContext.Repo;
+using Renligou.Core.Domain.EventingContext.Repo;
 using Renligou.Core.Shared.Commanding;
 using Renligou.Core.Shared.Ddd;
-using Renligou.Core.Shared.Repo;
 
 namespace Renligou.Core.Application.IdentityAccess.Handlers;
 
@@ -39,13 +39,13 @@ public class ModifyRoleBasicHandler(
         }
 
         // 4. 修改领域行为
-        role.ModifyBasic(command.RoleName, command.DisplayName);
+        role.ModifyBasic(command.RoleName, command.DisplayName, command.Description);
 
         // 5. 保存
         await _roleRepository.SaveAsync(role);
 
         // 6. Outbox
-        await _outboxRepository.AddAsync(role.GetRegisteredEvents(), "DOMAIN", role.GetType().Name, role.Id.Id.ToString());
+        await _outboxRepository.AddAsync(role.GetRegisteredEvents(), "DOMAIN", role.GetType().Name, role.Id.id.ToString());
 
         return Result.Ok();
     }

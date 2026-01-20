@@ -1,10 +1,9 @@
 using Renligou.Core.Application.IdentityAccess.Commands;
 using Renligou.Core.Domain.AuthorizationContext.Model;
 using Renligou.Core.Domain.AuthorizationContext.Repo;
+using Renligou.Core.Domain.EventingContext.Repo;
 using Renligou.Core.Shared.Commanding;
 using Renligou.Core.Shared.Ddd;
-using Renligou.Core.Shared.Generators;
-using Renligou.Core.Shared.Repo;
 
 namespace Renligou.Core.Application.IdentityAccess.Handlers;
 
@@ -36,7 +35,7 @@ public class CreateRoleHandler(
 
         // 3. 生成 ID 并构造聚合根
         var id = _idGenerator.NextId();
-        var role = new Role(new AggregateId(id, true), command.RoleName, command.DisplayName);
+        var role = new Role(new AggregateId(id, true), command.RoleName, command.DisplayName, command.Description);
 
         // 4. 执行创建逻辑 (内部注册领域事件)
         role.Create();
@@ -45,7 +44,7 @@ public class CreateRoleHandler(
         await _roleRepository.SaveAsync(role);
 
         // 6. 保存到 Outbox
-        await _outboxRepository.AddAsync(role.GetRegisteredEvents(), "DOMAIN", role.GetType().Name, role.Id.Id.ToString());
+        await _outboxRepository.AddAsync(role.GetRegisteredEvents(), "DOMAIN", role.GetType().Name, role.Id.id.ToString());
 
         return Result.Ok();
     }

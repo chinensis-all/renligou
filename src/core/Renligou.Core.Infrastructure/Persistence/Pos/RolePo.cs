@@ -33,6 +33,9 @@ public class RolePo
     [Column("display_name")]
     public string DisplayName { get; set; } = string.Empty;
 
+    [Column("description")]
+    public string Description { get; set; } = string.Empty;
+
     /// <summary>
     /// 创建时间
     /// </summary>

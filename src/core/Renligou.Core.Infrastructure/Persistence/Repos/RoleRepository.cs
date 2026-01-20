@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Renligou.Core.Application.Common.Queries;
 using Renligou.Core.Application.IdentityAccess.Queries;
 using Renligou.Core.Domain.AuthorizationContext.Model;
 using Renligou.Core.Domain.AuthorizationContext.Repo;
 using Renligou.Core.Infrastructure.Persistence.Pos;
 using Renligou.Core.Shared.Ddd;
-using Renligou.Core.Shared.Repo;
 
 namespace Renligou.Core.Infrastructure.Persistence.Repos;
 
@@ -34,7 +34,7 @@ public class RoleRepository(DbContext _db) : IRoleRepository, IRoleQueryReposito
 
     public async Task SaveAsync(Role aggregate)
     {
-        if (_tracked.TryGetValue(aggregate.Id.Id, out var po))
+        if (_tracked.TryGetValue(aggregate.Id.id, out var po))
         {
             // 已存在，检查是否需要软删除
             var events = aggregate.GetRegisteredEvents();
@@ -54,7 +54,7 @@ public class RoleRepository(DbContext _db) : IRoleRepository, IRoleQueryReposito
             // 新增
             po = new RolePo
             {
-                Id = aggregate.Id.Id,
+                Id = aggregate.Id.id,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
                 DeletedAt = 0
@@ -89,6 +89,7 @@ public class RoleRepository(DbContext _db) : IRoleRepository, IRoleQueryReposito
                 Id = x.Id,
                 RoleName = x.RoleName,
                 DisplayName = x.DisplayName,
+                Description = x.Description,
                 CreatedAt = x.CreatedAt,
                 UpdatedAt = x.UpdatedAt
             })
@@ -108,7 +109,8 @@ public class RoleRepository(DbContext _db) : IRoleRepository, IRoleQueryReposito
         {
             Id = x.Id,
             RoleName = x.RoleName,
-            DisplayName = x.DisplayName
+            DisplayName = x.DisplayName,
+            Description = x.Description
         }).ToListAsync(cancellationToken);
     }
 
@@ -131,34 +133,31 @@ public class RoleRepository(DbContext _db) : IRoleRepository, IRoleQueryReposito
                 Id = x.Id,
                 RoleName = x.RoleName,
                 DisplayName = x.DisplayName,
+                Description = x.Description,
                 CreatedAt = x.CreatedAt,
                 UpdatedAt = x.UpdatedAt
             })
             .ToListAsync(cancellationToken);
 
-        return new Pagination<RoleDetailDto>(items, total, page, pageSize);
+        return new Pagination<RoleDetailDto>
+        {
+            Total = total,
+            Page = page,
+            PageSize = pageSize,
+            Items = items
+        };
     }
 
     // --- Helper Methods ---
 
-    private static Role MapToAggregate(RolePo po)
+    private Role MapToAggregate(RolePo po)
     {
-        // 使用反射或特定的私有构造函数/工厂模式来重建聚合根
-        // 这里假设 Role 有一个接受所有必要参数的构造函数，或者通过私有设置器
-        var aggregate = (Role)Activator.CreateInstance(typeof(Role), true)!;
-        
-        // 由于字段是 private set，需要使用反射或定义一个内部初始化方法
-        // 为了遵循 Skill 里的“性能优先”和“减少反射”，通常建议在聚合根里提供一个 InternalLoad 方法
-        // 或者直接在构造函数中处理。
-        
-        var idField = typeof(AggregateBase).GetProperty("Id")!;
-        idField.SetValue(aggregate, new AggregateId(po.Id, false));
-
-        var roleNameField = typeof(Role).GetProperty("RoleName")!;
-        roleNameField.SetValue(aggregate, po.RoleName);
-
-        var displayNameField = typeof(Role).GetProperty("DisplayName")!;
-        displayNameField.SetValue(aggregate, po.DisplayName);
+        Role aggregate = new(
+            new AggregateId(po.Id, true),
+            po.RoleName,
+            po.DisplayName,
+            po.Description
+        );
 
         return aggregate;
     }
@@ -167,5 +166,6 @@ public class RoleRepository(DbContext _db) : IRoleRepository, IRoleQueryReposito
     {
         po.RoleName = aggregate.RoleName;
         po.DisplayName = aggregate.DisplayName;
+        po.Description = aggregate.Description;
     }
 }

@@ -14,7 +14,7 @@ namespace Renligou.Core.Application.Common.Queries
         public long Total { get; init; }
 
         [Description("数据列表")]
-        public List<T> Items { get; init; }
+        public List<T> Items { get; init; } = new List<T>();
 
         [Description("总页数")]
         public long TotalPages => (long)Math.Ceiling((double)Total / PageSize);

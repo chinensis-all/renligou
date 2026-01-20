@@ -18,6 +18,11 @@ public sealed record CreateRoleCommand : ICommand<Result>
     /// </summary>
     public string DisplayName { get; init; } = string.Empty;
 
+    /// <summary>
+    /// 角色描述
+    /// </summary>
+    public string Description { get; init; } = string.Empty;
+
     public Result Validate()
     {
         if (string.IsNullOrWhiteSpace(RoleName))
