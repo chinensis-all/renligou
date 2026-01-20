@@ -166,3 +166,25 @@ CREATE TABLE IF NOT EXISTS `departments`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='部门表';
 
+-- Boss 菜单表
+DROP TABLE IF EXISTS `menus`;
+CREATE TABLE IF NOT EXISTS `menus`
+(
+    `id`             BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '菜单ID',
+    `parent_id`      BIGINT       NOT NULL DEFAULT 0 COMMENT '父级菜单ID',
+    `menu_name`      VARCHAR(100) NOT NULL COMMENT '菜单名称',
+    `menu_tag`       VARCHAR(100) NOT NULL DEFAULT '' COMMENT '菜单标识(主要用于菜单同名时，可采用tag进行区分)',
+    `path`           VARCHAR(255) NOT NULL DEFAULT '' COMMENT '菜单路径',
+    `component`      VARCHAR(255) NOT NULL DEFAULT '' COMMENT '前端组件路径',
+    `icon`           VARCHAR(100) NOT NULL DEFAULT '' COMMENT '菜单图标',
+    `sorter`         INT          NOT NULL DEFAULT 0 COMMENT '菜单排序号',
+    `is_hidden`      TINYINT(1)   NOT NULL DEFAULT 0 COMMENT '是否隐藏(0=否,1=是)',
+    `permit_buttons` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '允许的按钮权限, 多个逗号分隔',
+    `created_at`     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at`     BIGINT       NOT NULL DEFAULT 0 COMMENT '删除时间(逻辑删除)',
+    KEY `idx_parent_id` (`parent_id`) USING BTREE,
+    UNIQUE KEY `uk_menu_name_tag` (`menu_name`, `menu_tag`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT ='Boss 菜单表';
