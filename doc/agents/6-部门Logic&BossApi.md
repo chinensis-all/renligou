@@ -8,7 +8,7 @@
 
 定义如下：
 - [数据库表名] : `departments`
-- [基础类名] : Permision
+- [基础类名] : Department
 - [领域名] :  IdentityAccess
 - [上下文名] : AuthorizationContext
 
