@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Renligou.Api.Boss.Requests;
 using Renligou.Core.Application.Common.Queries;
@@ -14,17 +15,19 @@ namespace Renligou.Api.Boss.Controllers
     /// </summary>
     [ApiController]
     [Route("/permission-groups")]
-    public class PermissionGroupsController(
+    public class PermissionGroupController(
         ICommandBus _commandBus,
         IQueryBus _queryBus,
         IUnitOfWork _uow,
-        ILogger<PermissionGroupsController> _logger
+        ILogger<PermissionGroupController> _logger
     ) : Controller
     {
         /// <summary>
         /// 创建权限组
         /// </summary>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreatePermissionGroupRequest request, CancellationToken cancellationToken = default)
         {
             var command = new CreatePermissionGroupCommand
@@ -51,6 +54,8 @@ namespace Renligou.Api.Boss.Controllers
         /// 修改权限组
         /// </summary>
         [HttpPut("{id:long}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Modify(
             [FromRoute] long id,
             [FromBody] ModifyPermissionGroupRequest request,
@@ -84,6 +89,8 @@ namespace Renligou.Api.Boss.Controllers
         /// 删除权限组
         /// </summary>
         [HttpDelete("{id:long}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Destroy(
             [FromRoute] long id,
             CancellationToken cancellationToken = default
@@ -107,7 +114,12 @@ namespace Renligou.Api.Boss.Controllers
         /// <summary>
         /// 获取权限组详情
         /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         [HttpGet("{id:long}")]
+        [ProducesResponseType(typeof(PermissionGroupDetailDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetDetail(
             [FromRoute] long id,
             CancellationToken cancellationToken = default
@@ -128,6 +140,8 @@ namespace Renligou.Api.Boss.Controllers
         /// 获取权限组列表
         /// </summary>
         [HttpGet]
+        [ProducesResponseType(typeof(List<PermissionGroupListDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetList(
             [FromQuery] GetPermissionGroupListRequest request,
             CancellationToken cancellationToken = default
@@ -148,10 +162,9 @@ namespace Renligou.Api.Boss.Controllers
             return Ok(res.Value);
         }
 
-        /// <summary>
-        /// 获取权限组分页
-        /// </summary>
-        [HttpGet("pagination")]
+        /*[HttpGet("pagination")]
+        [ProducesResponseType(typeof(Pagination<PermissionGroupDetailDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetPage(
             [FromQuery] GetPermissionGroupPageRequest request,
             CancellationToken cancellationToken = default
@@ -165,6 +178,39 @@ namespace Renligou.Api.Boss.Controllers
             );
 
             var res = await _queryBus.QueryAsync<GetPermissionGroupPageQuery, Result<Pagination<PermissionGroupDetailDto>>>(query, cancellationToken);
+
+            if (!res.Success)
+            {
+                return BadRequest(res.Error);
+            }
+
+            return Ok(res.Value);
+        }*/
+
+        /// <summary>
+        /// 获取权限组树
+        /// </summary>
+        /// <param name="parentId">父权限组ID（0表示顶级）</param>
+        /// <param name="name">权限组名称/显示名称（模糊匹配）</param>
+        /// <param name="cancellationToken">取消令牌</param>
+        /// <returns>树形结构列表</returns>
+        [HttpGet("tree")]
+        [ProducesResponseType(typeof(List<PermissionGroupTreeDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetTreeAsync(
+            [FromQuery] long parentId = 0,
+            [FromQuery] string? name = null,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var query = new GetPermissionGroupTreeQuery
+            {
+                ParentId = parentId,
+                Name = name
+            };
+
+            // 关键路径性能优先：权限组数据量通常较小，在内存中构建树结构
+            var res = await _queryBus.QueryAsync<GetPermissionGroupTreeQuery, Result<List<PermissionGroupTreeDto>>>(query, cancellationToken);
 
             if (!res.Success)
             {

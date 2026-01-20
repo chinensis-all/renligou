@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Renligou.Api.HR.Requests;
 using Renligou.Core.Application.Enterprise.Queries;
 using Renligou.Core.Shared.Bus;
@@ -24,6 +25,8 @@ namespace Renligou.Api.HR.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(typeof(List<CompanyListDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetList(
             [FromQuery] GetCompanyListRequest request,
             CancellationToken cancellationToken = default

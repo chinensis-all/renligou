@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Renligou.Api.Boss.Requests;
 using Renligou.Core.Application.Common.Queries;
 using Renligou.Core.Application.Enterprise.Commands;
@@ -28,6 +29,8 @@ namespace Renligou.Api.Boss.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] CreateCompanyRequest request, CancellationToken cancellationToken = default)
         {
             DateOnly? effectiveDate = string.IsNullOrWhiteSpace(request.EffectiveDate)
@@ -74,6 +77,8 @@ namespace Renligou.Api.Boss.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("{id:long}/basic")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ModifyBasic(
             [FromRoute] long id,
             [FromBody] ModifyCompanyBasicRequest request,
@@ -97,7 +102,7 @@ namespace Renligou.Api.Boss.Controllers
             {
                 return await _commandBus.SendAsync<ModifyCompanyBasicCommand, Result>(command, cancellationToken);
             }, true);
-            if (res.Success)
+            if (!res.Success)
             {
                 return BadRequest(res.Error);
             }
@@ -113,6 +118,8 @@ namespace Renligou.Api.Boss.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("{id:long}/address")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ModifyAddress(
             [FromRoute] long id,
             [FromBody] ModifyCompanyAddressRequest request,
@@ -149,6 +156,8 @@ namespace Renligou.Api.Boss.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpPut("{id:long}/state")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> ModifyState(
             [FromRoute] long id,
             [FromBody] ModifyCompanyStateRequest request,
@@ -189,6 +198,8 @@ namespace Renligou.Api.Boss.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{id:long}")]
+        [ProducesResponseType(typeof(CompanyDetailDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetDetail(
             [FromRoute] long id,
             CancellationToken cancellationToken = default
@@ -211,6 +222,8 @@ namespace Renligou.Api.Boss.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet]
+        [ProducesResponseType(typeof(List<CompanyListDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetList(
             [FromQuery] GetCompanyListRequest request,
             CancellationToken cancellationToken = default
@@ -240,6 +253,8 @@ namespace Renligou.Api.Boss.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("pagination")]
+        [ProducesResponseType(typeof(Pagination<CompanyDetailDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetPage(
             [FromQuery] GetCompanyPageRequest request,
             CancellationToken cancellationToken = default

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Renligou.Core.Application.Common.Queries;
 using Renligou.Core.Application.IdentityAccess.Criterias;
@@ -141,6 +144,53 @@ namespace Renligou.Core.Infrastructure.Persistence.Repos
                 Total = total,
                 Items = items
             };
+        }
+
+        public async Task<List<PermissionGroupTreeDto>> GetPermissionGroupTreeAsync(PermissionGroupTreeCriteria criteria, CancellationToken cancellationToken = default)
+        {
+            var query = _db.Set<PermissionGroupPo>()
+                .AsNoTracking()
+                .Where(x => x.DeletedAt == 0);
+
+            if (!string.IsNullOrWhiteSpace(criteria.Name))
+            {
+                query = query.Where(x => x.GroupName.Contains(criteria.Name) || x.DisplayName.Contains(criteria.Name));
+            }
+
+            var pos = await query
+                .OrderBy(x => x.Sorter)
+                .ToListAsync(cancellationToken);
+
+            var allNodes = pos.Select(x => new PermissionGroupTreeDto
+            {
+                Id = x.Id,
+                ParentId = x.ParentId,
+                GroupName = x.GroupName,
+                DisplayName = x.DisplayName,
+                Description = x.Description,
+                Sorter = x.Sorter,
+                Children = new List<PermissionGroupTreeDto>()
+            }).ToList();
+
+            if (allNodes.Count == 0) return new List<PermissionGroupTreeDto>();
+
+            var nodeMap = allNodes.ToDictionary(x => x.Id);
+            var rootNodes = new List<PermissionGroupTreeDto>();
+
+            foreach (var node in allNodes)
+            {
+                if (node.ParentId == 0 || !nodeMap.ContainsKey(node.ParentId))
+                {
+                    // Root node or parent not found (in case of partial results due to filtering)
+                    rootNodes.Add(node);
+                }
+                else
+                {
+                    nodeMap[node.ParentId].Children.Add(node);
+                }
+            }
+
+            return rootNodes;
         }
 
         private IQueryable<PermissionGroupPo> GetSearchQuery(PermissionGroupSearchCriteria criteria)

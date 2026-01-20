@@ -406,3 +406,4 @@ public class [控制器名]ControllerIntegrationTests
   [MaxLength(50, ErrorMessage = "公司名称不能超过50个字符")]
   public string CompanyName { get; init; } = default!;
   ```
+- 方法中要添加ProducesResponseType， 用于向前端描述可能的返回类型，便于生成API文档。

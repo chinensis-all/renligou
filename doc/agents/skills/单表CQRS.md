@@ -31,7 +31,7 @@
 应按以下规则创建值对象类:
 
 - 类命名 : `[基础类名][字段名]`， 字段名大小，驼峰化，首字母大写, 如果[基础类名]与[字段名]存在相同单词，则消除字段名里相同单词 ；
-- 文件位置 : `src/core/Renligou.Core.Domain/[上下文名]/Model/Value/` ;
+- 文件位置 : `src/core/Renligou.Core.Domain/[上下文名]/Value/` ;
 - 类型 : 应实现为sealed record ；
 
 参考如下:
@@ -81,7 +81,7 @@ public sealed record CompanyType
 子段落前后均为空行，且子段落前有注释说明。应按以下规则创建值对象类:
 
 - 类命名 : `[基础类名][子段落注释说明括号内英文]` ；
-- 文件位置 : `src/core/Renligou.Core.Domain/[上下文名]/Model/Value/` ;
+- 文件位置 : `src/core/Renligou.Core.Domain/[上下文名]/Model/` ;
 - 类型 : 应实现为sealed record ；
 - 属性 : 包含子段落中的所有字段，采用驼峰形式，首字母大写；
 - 属性类型 : 按照数据库字段类型映射为C#类型，如果字段类型为enum，则映射为对应的值对象类型；
@@ -803,3 +803,4 @@ public class CompanyControllerIntegrationTests
  [Description("公司ID")]
  public string CompanyId { get; init; }
 ```
+- Dto均应实现为`sealed record`
