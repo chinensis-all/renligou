@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Renligou.Core.Application.IdentityAccess.Queries
 {
@@ -7,39 +8,25 @@ namespace Renligou.Core.Application.IdentityAccess.Queries
     /// </summary>
     public sealed record PermissionGroupTreeDto
     {
-        /// <summary>
-        /// 权限组ID
-        /// </summary>
+        [Description("权限组ID")]
         public long Id { get; init; }
 
-        /// <summary>
-        /// 父权限组ID
-        /// </summary>
+        [Description("父权限组ID")]
         public long ParentId { get; init; }
 
-        /// <summary>
-        /// 权限组名称
-        /// </summary>
+        [Description("权限组名称")]
         public string GroupName { get; init; } = string.Empty;
 
-        /// <summary>
-        /// 显示名称
-        /// </summary>
+        [Description("显示名称")]
         public string DisplayName { get; init; } = string.Empty;
 
-        /// <summary>
-        /// 描述
-        /// </summary>
+        [Description("描述")]
         public string? Description { get; init; }
 
-        /// <summary>
-        /// 排序号
-        /// </summary>
+        [Description("排序号")]
         public int Sorter { get; init; }
 
-        /// <summary>
-        /// 子权限组
-        /// </summary>
+        [Description("子权限组")]
         public List<PermissionGroupTreeDto> Children { get; init; } = new();
     }
 }

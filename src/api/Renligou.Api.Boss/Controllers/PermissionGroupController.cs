@@ -162,10 +162,7 @@ namespace Renligou.Api.Boss.Controllers
             return Ok(res.Value);
         }
 
-        /// <summary>
-        /// 获取权限组分页
-        /// </summary>
-        [HttpGet("pagination")]
+        /*[HttpGet("pagination")]
         [ProducesResponseType(typeof(Pagination<PermissionGroupDetailDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Error), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetPage(
@@ -188,7 +185,7 @@ namespace Renligou.Api.Boss.Controllers
             }
 
             return Ok(res.Value);
-        }
+        }*/
 
         /// <summary>
         /// 获取权限组树
