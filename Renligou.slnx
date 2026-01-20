@@ -16,33 +16,34 @@
   </Folder>
   <Folder Name="/src/" />
   <Folder Name="/src/api/">
-    <Project Path="D:/wwwroot/Renligou/src/api/Renligou.Api.Boss/Renligou.Api.Boss.csproj" Id="e12f1444-d7ee-4ad8-ad9c-6578a9f85701" />
-    <Project Path="D:/wwwroot/Renligou/src/api/Renligou.Api.HR/Renligou.Api.HR.csproj" />
-    <Project Path="D:/wwwroot/Renligou/src/api/Renligou.Api.User/Renligou.Api.User.csproj" />
+    <Project Path="src/api/Renligou.Api.Boss/Renligou.Api.Boss.csproj" Id="e12f1444-d7ee-4ad8-ad9c-6578a9f85701" />
+    <Project Path="src/api/Renligou.Api.HR/Renligou.Api.HR.csproj" />
+    <Project Path="src/api/Renligou.Api.User/Renligou.Api.User.csproj" />
   </Folder>
   <Folder Name="/src/core/">
-    <Project Path="D:/wwwroot/Renligou/src/core/Renligou.Core.Application/Renligou.Core.Application.csproj" />
-    <Project Path="D:/wwwroot/Renligou/src/core/Renligou.Core.Domain/Renligou.Core.Domain.csproj" />
-    <Project Path="D:/wwwroot/Renligou/src/core/Renligou.Core.Infrastructure/Renligou.Core.Infrastructure.csproj" />
-    <Project Path="D:/wwwroot/Renligou/src/core/Renligou.Core.Shared/Renligou.Core.Shared.csproj" />
+    <Project Path="src/core/Renligou.Core.Application/Renligou.Core.Application.csproj" />
+    <Project Path="src/core/Renligou.Core.Domain/Renligou.Core.Domain.csproj" />
+    <Project Path="src/core/Renligou.Core.Infrastructure/Renligou.Core.Infrastructure.csproj" />
+    <Project Path="src/core/Renligou.Core.Shared/Renligou.Core.Shared.csproj" />
   </Folder>
   <Folder Name="/src/interface/">
-    <Project Path="D:/wwwroot/Renligou/src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss.Shared/Renligou.Interface.Boss.Shared.csproj" />
-    <Project Path="D:/wwwroot/Renligou/src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss.Web/Renligou.Interface.Boss.Web.csproj" />
-    <Project Path="D:/wwwroot/Renligou/src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss/Renligou.Interface.Boss.csproj" />
-    <Project Path="D:/wwwroot/Renligou/src/interface/Renligou.Interface.HR/Renligou.Interface.HR.csproj" />
-    <Project Path="D:/wwwroot/Renligou/src/interface/Renligou.Interface.User/Renligou.Interface.User.csproj" />
+    <Project Path="src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss.Shared/Renligou.Interface.Boss.Shared.csproj" />
+    <Project Path="src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss.Web/Renligou.Interface.Boss.Web.csproj" />
+    <Project Path="src/interface/Renligou.Interface.Boss/Renligou.Interface.Boss/Renligou.Interface.Boss.csproj" />
+    <Project Path="src/interface/Renligou.Interface.HR/Renligou.Interface.HR.csproj" />
+    <Project Path="src/interface/Renligou.Interface.User/Renligou.Interface.User.csproj" />
   </Folder>
   <Folder Name="/src/job/">
-    <Project Path="D:/wwwroot/Renligou/src/job/Renligou.Job.Main/Renligou.Job.Main.csproj" Id="5c914c6f-0d7c-4d7a-b381-81d737b6a177" />
+    <Project Path="src/job/Renligou.Job.Main/Renligou.Job.Main.csproj" Id="5c914c6f-0d7c-4d7a-b381-81d737b6a177" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="D:/wwwroot/Renligou/tests/Renligou.Api.HR.Tests/Renligou.Api.HR.Tests.csproj" Id="6d02c29e-0402-4176-8a77-5ad3c9d8c02b" />
-    <Project Path="D:/wwwroot/Renligou/tests/Renligou.Api.User.Tests/Renligou.Api.User.Tests.csproj" Id="c6895f46-07cb-4f11-84c0-4c8d4aa72ab5" />
-    <Project Path="D:/wwwroot/Renligou/tests/Renligou.Core.Application.Tests/Renligou.Core.Application.Tests.csproj" Id="19c59d54-4e2e-4ca7-9315-b41c55d73d77" />
-    <Project Path="D:/wwwroot/Renligou/tests/Renligou.Core.Domain.Tests/Renligou.Core.Domain.Tests.csproj" Id="c6491ff2-d8ee-44c9-a2f2-61654b513e57" />
-    <Project Path="D:/wwwroot/Renligou/tests/Renligou.Core.Infrastructure.Tests/Renligou.Core.Infrastructure.Tests.csproj" Id="ea51a3f3-5f21-4441-b508-ba66620eae27" />
-    <Project Path="D:/wwwroot/Renligou/tests/Renligou.Job.Main.Tests/Renligou.Job.Main.Tests.csproj" Id="be9b1032-50f1-40d5-87d9-e529675f46ad" />
+    <Project Path="tests/Renligou.Api.Boss.Tests/Renligou.Api.Boss.Tests.csproj" />
+    <Project Path="tests/Renligou.Api.HR.Tests/Renligou.Api.HR.Tests.csproj" Id="6d02c29e-0402-4176-8a77-5ad3c9d8c02b" />
+    <Project Path="tests/Renligou.Api.User.Tests/Renligou.Api.User.Tests.csproj" Id="c6895f46-07cb-4f11-84c0-4c8d4aa72ac5" />
+    <Project Path="tests/Renligou.Core.Application.Tests/Renligou.Core.Application.Tests.csproj" Id="19c59d54-4e2e-4ca7-9315-b41c55d73d77" />
+    <Project Path="tests/Renligou.Core.Domain.Tests/Renligou.Core.Domain.Tests.csproj" Id="c6491ff2-d8ee-44c9-a2f2-61654b513e57" />
+    <Project Path="tests/Renligou.Core.Infrastructure.Tests/Renligou.Core.Infrastructure.Tests.csproj" Id="ea51a3f3-5f21-4441-b508-ba66620eae27" />
+    <Project Path="tests/Renligou.Job.Main.Tests/Renligou.Job.Main.Tests.csproj" Id="be9b1032-50f1-40d5-87d9-e529675f46ad" />
   </Folder>
   <Folder Name="/解决方案项/">
     <File Path=".gitignore" />
