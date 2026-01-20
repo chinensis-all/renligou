@@ -110,3 +110,21 @@ CREATE TABLE IF NOT EXISTS `permission_groups`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_unicode_ci COMMENT ='权限组表';
+
+-- 权限表
+DROP TABLE IF EXISTS `permissions`;
+CREATE TABLE IF NOT EXISTS `permissions`
+(
+    `id`              BIGINT PRIMARY KEY COMMENT '主键ID',
+    `group_id`        BIGINT       NOT NULL COMMENT '权限组ID',
+    `permission_name` VARCHAR(100) NOT NULL COMMENT '权限标识',
+    `display_name`    VARCHAR(100) NOT NULL COMMENT '权限名称',
+    `description`     VARCHAR(500) NOT NULL DEFAULT '' COMMENT '权限描述',
+    `created_at`      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `updated_at`      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    `deleted_at`      BIGINT       NOT NULL DEFAULT 0 COMMENT '删除时间(逻辑删除)',
+    UNIQUE INDEX `uk_permission_name` (`permission_name`) USING BTREE,
+    UNIQUE INDEX `uk_display_name` (`display_name`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci COMMENT ='权限表';
