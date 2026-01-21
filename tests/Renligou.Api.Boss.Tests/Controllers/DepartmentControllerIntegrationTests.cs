@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
 using Renligou.Api.Boss.Requests;
@@ -8,12 +9,11 @@ using Renligou.Core.Application.IdentityAccess.Queries;
 using Renligou.Core.Shared.Bus;
 using Renligou.Core.Shared.Ddd;
 using Renligou.Core.Shared.EFCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Renligou.Api.Boss.Tests.Controllers;
 
 [TestFixture]
-public class RoleControllerIntegrationTests
+public class DepartmentControllerIntegrationTests
 {
     private CustomWebApplicationFactory<Program> _factory;
     private HttpClient _client;
@@ -47,33 +47,54 @@ public class RoleControllerIntegrationTests
     public async Task Create_ShouldReturnOk_WhenSuccessful()
     {
         // Arrange
-        var request = new CreateRoleRequest { RoleName = "Test", DisplayName = "测试" };
-        _mockCommandBus.SendAsync<CreateRoleCommand, Result>(Arg.Any<CreateRoleCommand>(), Arg.Any<CancellationToken>())
+        var request = new CreateDepartmentRequest 
+        { 
+            CompanyId = 1, 
+            DeptName = "IT", 
+            DeptCode = "IT01" 
+        };
+        _mockCommandBus.SendAsync<CreateDepartmentCommand, Result>(Arg.Any<CreateDepartmentCommand>(), Arg.Any<CancellationToken>())
             .Returns(Result.Ok());
 
         // Act
-        var response = await _client.PostAsJsonAsync("/roles", request);
+        var response = await _client.PostAsJsonAsync("/departments", request);
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
     }
 
     [Test]
-    public async Task GetDetail_ShouldReturnData_WhenExists()
+    public async Task GetTree_ShouldReturnData()
     {
         // Arrange
-        var id = 12345L;
-        var dto = new RoleDetailDto { Id = id, RoleName = "Admin", DisplayName = "管理员" };
-        _mockQueryBus.QueryAsync<GetRoleDetailQuery, Result<RoleDetailDto?>>(Arg.Any<GetRoleDetailQuery>(), Arg.Any<CancellationToken>())
-            .Returns(Result<RoleDetailDto?>.Ok(dto));
+        var tree = new List<DepartmentTreeNodeDto>
+        {
+            new DepartmentTreeNodeDto { Id = 1, Name = "Root", Children = new List<DepartmentTreeNodeDto>() }
+        };
+        _mockQueryBus.QueryAsync<GetDepartmentTreeQuery, List<DepartmentTreeNodeDto>>(Arg.Any<GetDepartmentTreeQuery>(), Arg.Any<CancellationToken>())
+            .Returns(tree);
 
         // Act
-        var response = await _client.GetAsync($"/roles/{id}");
+        var response = await _client.GetAsync("/departments/tree?CompanyId=1");
 
         // Assert
         Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
-        var result = await response.Content.ReadFromJsonAsync<RoleDetailDto>();
-        Assert.That(result?.Id, Is.EqualTo(id));
+        var result = await response.Content.ReadFromJsonAsync<List<DepartmentTreeNodeDto>>();
+        Assert.That(result, Has.Count.EqualTo(1));
+    }
+
+    [Test]
+    public async Task Inactive_ShouldReturnOk()
+    {
+        // Arrange
+        _mockCommandBus.SendAsync<InactiveDepartmentCommand, Result>(Arg.Any<InactiveDepartmentCommand>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Ok());
+
+        // Act
+        var response = await _client.PostAsync("/departments/123/lock", null);
+
+        // Assert
+        Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.OK));
     }
 
     [OneTimeTearDown]

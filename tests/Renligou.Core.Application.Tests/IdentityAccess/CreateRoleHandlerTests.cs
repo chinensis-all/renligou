@@ -4,10 +4,9 @@ using Renligou.Core.Application.IdentityAccess.Commands;
 using Renligou.Core.Application.IdentityAccess.Handlers;
 using Renligou.Core.Domain.AuthorizationContext.Model;
 using Renligou.Core.Domain.AuthorizationContext.Repo;
+using Renligou.Core.Domain.EventingContext.Repo;
 using Renligou.Core.Shared.Ddd;
 using Renligou.Core.Shared.Events;
-using Renligou.Core.Shared.Generators;
-using Renligou.Core.Shared.Repo;
 
 namespace Renligou.Core.Application.Tests.IdentityAccess;
 
@@ -47,7 +46,7 @@ public class CreateRoleHandlerTests
 
         // Assert
         Assert.That(result.Success, Is.True);
-        _roleRepositoryMock.Verify(x => x.SaveAsync(It.Is<Role>(r => r.RoleName == "Admin" && r.Id.Id == 123)), Times.Once);
+        _roleRepositoryMock.Verify(x => x.SaveAsync(It.Is<Role>(r => r.RoleName == "Admin" && r.Id.id == 123)), Times.Once);
         _outboxRepositoryMock.Verify(x => x.AddAsync(It.IsAny<IReadOnlyList<IIntegrationEvent>>(), "DOMAIN", "Role", "123"), Times.Once);
     }
 
