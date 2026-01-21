@@ -13,7 +13,7 @@ public class RoleTests
     {
         // Arrange
         var id = new AggregateId(12345, true);
-        var role = new Role(id, "Admin", "管理员");
+        var role = new Role(id, "Admin", "管理员", "描述");
 
         // Act
         role.Create();
@@ -34,10 +34,10 @@ public class RoleTests
     {
         // Arrange
         var id = new AggregateId(12345, false);
-        var role = new Role(id, "Admin", "管理员");
+        var role = new Role(id, "Admin", "管理员", "描述");
 
         // Act
-        role.ModifyBasic("SuperAdmin", "超级管理员");
+        role.ModifyBasic("SuperAdmin", "超级管理员", "新描述");
 
         // Assert
         Assert.That(role.RoleName, Is.EqualTo("SuperAdmin"));
@@ -57,7 +57,7 @@ public class RoleTests
     {
         // Arrange
         var id = new AggregateId(12345, false);
-        var role = new Role(id, "Admin", "管理员");
+        var role = new Role(id, "Admin", "管理员", "描述");
 
         // Act
         role.Destroy();
