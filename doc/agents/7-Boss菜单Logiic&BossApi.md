@@ -21,7 +21,21 @@ Boss菜单是Boss管理员权限分组/分类，请根据以下要求开发CQRS�
 - [控制器名] : MenuController
 - [路由前缀] : /menus
 
-## 3 补充规则
+变动：
+- 不用实现列表接口。
+- 不用实现分页接口
+
+## 3 菜单树结构API
+
+请参考Skill :  `doc\agents\skills\单表树查询处理器.md`
+
+定义如下：
+- [数据库表名] : `menus`
+- [基础类名] : Menu
+- [领域名] : IdentityAccess
+- [传输对象名] : MenuTreeNodeDto
+
+## 4 补充规则
 
 - 代码如果需要注释，应注尽注，符合AspNet Core及C#规范。
 - 所有异常信息必须中文，便于定位。

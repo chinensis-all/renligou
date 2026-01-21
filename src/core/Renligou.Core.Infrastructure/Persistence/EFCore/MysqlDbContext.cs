@@ -16,5 +16,6 @@ namespace Renligou.Core.Infrastructure.Persistence.EFCore
         public DbSet<PermissionPo> Permissions { get; set; } = null!;                               // 权限表
         public DbSet<RolePo> Roles { get; set; } = null!;                                           // 角色表
         public DbSet<DepartmentPo> Departments { get; set; } = null!;                               // 部门表
+        public DbSet<MenuPo> Menus { get; set; } = null!;                                           // 菜单表
     }
 }
