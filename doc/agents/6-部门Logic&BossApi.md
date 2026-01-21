@@ -18,10 +18,20 @@
 
 定义如下：
 
-- [控制器名] : PermissionController
-- [路由前缀] : /permissions
+- [控制器名] : DepartmentController
+- [路由前缀] : /departments
 
-## 3 补充规则
+## 3 部门树结构API
+
+请参考Skill :  `doc\agents\skills\单表树查询处理器.md`
+
+定义如下：
+- [数据库表名] : `departments`
+- [基础类名] : Department
+- [领域名] : IdentityAccess
+- [传输对象名] : DepartmentTreeNodeDto
+
+## 4 补充规则
 
 - 代码如果需要注释，应注尽注，符合AspNet Core及C#规范。
 - 所有异常信息必须中文，便于定位。
@@ -39,9 +49,3 @@
   * Controller 方法名: ActivateDepartment
   * 命令类名: ActivateDepartmentCommand
   * 名命令处理器类名: ActivateDepartmentHandler  
-- 需要添加一修改部门排序的接口
-  * router: put /departments/{id}/put
-  * Controller 方法名: ModifyDepartmentSorter
-  * 命令类名: ModifyDepartmentSorterCommand
-  * 名命令处理器类名:ModifyDepartmentSorterHandler  
-  * 该接口需要传入一个新的Sorter

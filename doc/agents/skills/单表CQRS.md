@@ -153,10 +153,10 @@ CREATE TABLE IF NOT EXISTS `companies`
 - 继承 : 继承自`Renligou.Core.Shared.Ddd.AggregateBase` ；
 - 属性 : 包含主段落中的所有字段及子段落对应的值对象类型，采用驼峰形式，首字母大写；
 - 规则1: 数据库表中的`created_at` 及 `updated_at`两个字段无需映射为聚合根属性；
-- 规则2: 数据库表中的`id`字段不用映射，应为已经在`AggregateBase`中定义；
+- 规则2: 数据库表中的`id`字段不用映射，因为已经在`AggregateBase`中定义且通过构造函数传递；
 - 规则3: 如果字段类型为enum，则映射为对应的值对象类型；
 - 规则4: 如果存在子段落，则应包含对应的值对象类型属性；
-- 规则5: 应包含领域行为方法，如创建，更新，删除等方法；
+- 规则5: 应包含领域行为方法，如创建，更新，删除等方法，并调用 `RegisterEvent` 注册事件；
 - 规则6: TINYINT(1)类型应映射为bool类型；
 - 规则7: DATETIME类型应映射为DateTimeOffset类型；
 - 规则8: DATE类型应映射为DateOnly类型；
@@ -164,6 +164,7 @@ CREATE TABLE IF NOT EXISTS `companies`
 - 规则10: BIGINT类型应映射为long类型；
 - 规则11: 对于可为空字段，应使用可空类型；
 - 规则12: 对于有默认值字段，应在属性初始化器中设置默认值；
+- 规则13: 不要使用 `AddDomainEvent`（那是旧版名称），统一使用 `RegisterEvent`；
 
 参考如下:
 ```csharp
@@ -319,7 +320,7 @@ public class Company : AggregateBase
             Address = this.CompanyAddress,
             State = this.State
         };
-        this.AddDomainEvent(createdEvent);
+        this.RegisterEvent(createdEvent);
     }
 
     public void ModifyState(
@@ -334,7 +335,7 @@ public class Company : AggregateBase
              CompanyId = this.Id.Id,
              State = state
          };
-         this.AddDomainEvent(stateModifiedEvent);
+         this.RegisterEvent(stateModifiedEvent);
     }
 }
 ```
@@ -634,8 +635,16 @@ public interface ICompanyQueryRepository : IRepository
      - New Aggregate -> Create PO -> Apply Changes -> `db.Add(po)`.
      - Existing Aggregate -> Get Tracked PO -> Apply Changes -> `db.Update(po)`.
   3. **MapToAggregate** : 将PO转换为聚合根，注意构造函数的调用，以及值对象的重构。
+     - **推荐做法**：使用 `Activator.CreateInstance(typeof([基础类名]), true)` 调用私有无参构造函数创建实例，然后使用反射设置 `Id` 等私有属性。这比公开设置器能更好地保持封装性。
   4. **ApplyAggregateToPo** : 将聚合根属性回写到PO。
   5. **Query Methods** : 使用EF Core的 `Select` 及 `AsNoTracking` (通常Query操作不需要追踪) 将PO投影(Project)为DTO返回。
+
+### 4.4 关于领域事件与 Outbox (重要)
+在 Handler 中，推荐显式注入 `IOutboxRepository`。
+1. 调用聚合根逻辑（此时事件记录在聚合根内部）。
+2. 调用 `Repository.SaveAsync` 保存业务数据。
+3. 调用 `_outboxRepository.AddAsync(aggregate.GetRegisteredEvents(), ...)` 将事件存入可靠消息表。
+这样做可以确保业务变更与事件发布在同一个数据库事务中（通过 `IUnitOfWork` 协调）。
 
 参考实现结构:
 ```csharp
