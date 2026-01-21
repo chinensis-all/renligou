@@ -4,8 +4,8 @@ using Renligou.Core.Application.IdentityAccess.Commands;
 using Renligou.Core.Application.IdentityAccess.Handlers;
 using Renligou.Core.Domain.AuthorizationContext.Model;
 using Renligou.Core.Domain.AuthorizationContext.Repo;
+using Renligou.Core.Domain.EventingContext.Repo;
 using Renligou.Core.Shared.Ddd;
-using Renligou.Core.Shared.Repo;
 
 namespace Renligou.Core.Application.Tests.IdentityAccess;
 
@@ -32,7 +32,7 @@ public class ModifyAndDestroyRoleHandlerTests
     {
         // Arrange
         var id = new AggregateId(123, false);
-        var role = new Role(id, "OldName", "OldDisplay");
+        var role = new Role(id, "OldName", "OldDisplay", "OldDesc");
         _roleRepositoryMock.Setup(x => x.LoadAsync(123)).ReturnsAsync(role);
         _roleRepositoryMock.Setup(x => x.IsRoleNameConflictAsync(123, "NewName")).ReturnsAsync(false);
         _roleRepositoryMock.Setup(x => x.IsDisplayNameConflictAsync(123, "NewDisplay")).ReturnsAsync(false);
@@ -68,7 +68,7 @@ public class ModifyAndDestroyRoleHandlerTests
     {
         // Arrange
         var id = new AggregateId(123, false);
-        var role = new Role(id, "Admin", "管理员");
+        var role = new Role(id, "Admin", "管理员", "描述");
         _roleRepositoryMock.Setup(x => x.LoadAsync(123)).ReturnsAsync(role);
 
         var command = new DestroyRoleCommand(123);

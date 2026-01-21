@@ -5,6 +5,8 @@
     <File Path="doc/agents/2-权限组Logic&amp;Boss Api.md" />
     <File Path="doc/agents/3-权限组树形结构查询.md" />
     <File Path="doc/agents/4-权限Logic&amp;BossApi.md" />
+    <File Path="doc/agents/6-部门Logic&amp;BossApi.md" />
+    <File Path="doc/agents/7-Boss菜单Logiic&amp;BossApi.md" />
   </Folder>
   <Folder Name="/doc/agents/skills/">
     <File Path="doc/agents/skills/单表CQRS.md" />
